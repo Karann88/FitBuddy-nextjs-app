@@ -606,7 +606,7 @@ export function StretchSequence() {
                                 {currentStretch && (
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img
-                                        src={currentStretch.image || "./placeholder.svg"}
+                                        src={currentStretch.image || "/placeholder.svg"}
                                         alt={currentStretch.name}
                                         className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                                     />
