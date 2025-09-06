@@ -126,3 +126,200 @@ Currently implements a mock user system with a hardcoded user ID for development
 - **Database**: Serverless PostgreSQL (Supabase) for scalable data storage
 - **Static Assets**: Optimized and minified frontend bundle
 - **Session Storage**: PostgreSQL-based session persistence for user state
+
+
+# File Tree: wellness-app
+
+Generated on: 9/6/2025, 11:55:59 AM
+Root path: `c:\Users\karan\OneDrive\Desktop\wellness-app`
+
+```
+├── 📁 .git/ 🚫 (auto-hidden)
+├── 📁 .next/ 🚫 (auto-hidden)
+├── 📁 .vscode/ 🚫 (auto-hidden)
+├── 📁 app/
+│   ├── 📁 auth/
+│   │   ├── 📁 forgot-password/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 login/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 reset-password/
+│   │   │   └── 📄 page.tsx
+│   │   └── 📁 signup/
+│   │       └── 📄 page.tsx
+│   ├── 📁 breathing/
+│   │   └── 📄 page.tsx
+│   ├── 📁 dashboard/
+│   │   ├── 📁 breathing/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 fitness/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 journal/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 meals/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 mood/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 sleep/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 stretching/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 water/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 weight/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📄 layout.tsx
+│   │   └── 📄 page.tsx
+│   ├── 📁 fitness/
+│   │   └── 📄 page.tsx
+│   ├── 📁 journal/
+│   │   └── 📄 page.tsx
+│   ├── 📁 meals/
+│   │   └── 📄 page.tsx
+│   ├── 📁 mood/
+│   │   └── 📄 page.tsx
+│   ├── 📁 privacy/
+│   │   └── 📄 page.tsx
+│   ├── 📁 sleep/
+│   │   └── 📄 page.tsx
+│   ├── 📁 stretching/
+│   │   └── 📄 page.tsx
+│   ├── 📁 terms/
+│   │   └── 📄 page.tsx
+│   ├── 📁 water/
+│   │   └── 📄 page.tsx
+│   ├── 📁 weight/
+│   │   └── 📄 page.tsx
+│   ├── 🎨 globals.css
+│   ├── 📄 layout.tsx
+│   └── 📄 page.tsx
+├── 📁 components/
+│   ├── 📁 auth/
+│   │   ├── 📄 auth-layout.tsx
+│   │   ├── 📄 auth-provider.tsx
+│   │   ├── 📄 forgot-password-form.tsx
+│   │   ├── 📄 login-form.tsx
+│   │   ├── 📄 protected-route.tsx
+│   │   ├── 📄 reset-password-form.tsx
+│   │   └── 📄 signup-form.tsx
+│   ├── 📁 ui/
+│   │   ├── 📄 accordion.tsx
+│   │   ├── 📄 alert-dialog.tsx
+│   │   ├── 📄 alert.tsx
+│   │   ├── 📄 aspect-ratio.tsx
+│   │   ├── 📄 avatar.tsx
+│   │   ├── 📄 badge.tsx
+│   │   ├── 📄 breadcrumb.tsx
+│   │   ├── 📄 button.tsx
+│   │   ├── 📄 calendar.tsx
+│   │   ├── 📄 card.tsx
+│   │   ├── 📄 carousel.tsx
+│   │   ├── 📄 chart.tsx
+│   │   ├── 📄 checkbox.tsx
+│   │   ├── 📄 collapsible.tsx
+│   │   ├── 📄 command.tsx
+│   │   ├── 📄 context-menu.tsx
+│   │   ├── 📄 dialog.tsx
+│   │   ├── 📄 drawer.tsx
+│   │   ├── 📄 dropdown-menu.tsx
+│   │   ├── 📄 form.tsx
+│   │   ├── 📄 hover-card.tsx
+│   │   ├── 📄 input-otp.tsx
+│   │   ├── 📄 input.tsx
+│   │   ├── 📄 label.tsx
+│   │   ├── 📄 menubar.tsx
+│   │   ├── 📄 navigation-menu.tsx
+│   │   ├── 📄 pagination.tsx
+│   │   ├── 📄 popover.tsx
+│   │   ├── 📄 progress.tsx
+│   │   ├── 📄 resizable.tsx
+│   │   ├── 📄 scroll-area.tsx
+│   │   ├── 📄 select.tsx
+│   │   ├── 📄 separator.tsx
+│   │   ├── 📄 sheet.tsx
+│   │   ├── 📄 sidebar.tsx
+│   │   ├── 📄 skeleton.tsx
+│   │   ├── 📄 slider.tsx
+│   │   ├── 📄 sonner.tsx
+│   │   ├── 📄 table.tsx
+│   │   ├── 📄 tabs.tsx
+│   │   ├── 📄 textarea.tsx
+│   │   ├── 📄 toggle-group.tsx
+│   │   ├── 📄 toggle.tsx
+│   │   └── 📄 tooltip.tsx
+│   ├── 📄 app-sidebar.tsx
+│   ├── 📄 breathing-exercise.tsx
+│   ├── 📄 dashboard-header.tsx
+│   ├── 📄 dashboard-shell.tsx
+│   ├── 📄 fitness-tracker.tsx
+│   ├── 📄 health-dashboard.tsx
+│   ├── 📄 meal-tracker.tsx
+│   ├── 📄 mental-health-journal.tsx
+│   ├── 📄 mode-toggle.tsx
+│   ├── 📄 mood-tracker.tsx
+│   ├── 📄 nav-main.tsx
+│   ├── 📄 nav-projects.tsx
+│   ├── 📄 nav-user.tsx
+│   ├── 📄 seesion-cleanup-provider.tsx
+│   ├── 📄 sleep-tracker.tsx
+│   ├── 📄 stretch-sequence.tsx
+│   ├── 📄 team-switcher.tsx
+│   ├── 📄 theme-provider.tsx
+│   ├── 📄 water-tracker.tsx
+│   └── 📄 weight-tracker.tsx
+├── 📁 hooks/
+│   └── 📄 use-mobile.ts
+├── 📁 lib/
+│   ├── 📄 auth-debug.ts
+│   ├── 📄 auth-errors.ts
+│   ├── 📄 auth-server.ts
+│   ├── 📄 auth.ts
+│   ├── 📄 middleware.ts
+│   ├── 📄 supabase.ts
+│   ├── 📄 utils.ts
+│   └── 📄 validation.ts
+├── 📁 node_modules/ 🚫 (auto-hidden)
+├── 📁 public/
+│   └── 📁 images/
+│       ├── 🖼️ child-pose.jpg
+│       ├── 🖼️ forward-fold.jpg
+│       ├── 🖼️ neck-stretch.jpg
+│       ├── 🖼️ seated-forward-bend.jpg
+│       ├── 🖼️ seated-twist.jpg
+│       ├── 🖼️ shoulder-stretch.jpg
+│       ├── 🖼️ supine-twist.jpg
+│       └── 🖼️ wrist-stretch.jpg
+├── 📁 supabase/
+│   ├── 📁 .branches/
+│   │   └── 📄 _current_branch
+│   ├── 📁 .temp/
+│   │   ├── 📄 cli-latest
+│   │   ├── 📄 gotrue-version
+│   │   ├── 📄 pooler-url
+│   │   ├── 📄 postgres-version
+│   │   ├── 📄 project-ref
+│   │   ├── 📄 rest-version
+│   │   └── 📄 storage-version
+│   ├── 📁 migrations/
+│   │   ├── 🗄️ 20250821180511_user_remote_schema.sql
+│   │   ├── 🗄️ 20250821180916_remote_schema.sql
+│   │   └── 🗄️ 20250821181307_remote_schema.sql
+│   ├── 🚫 .gitignore
+│   └── ⚙️ config.toml
+├── 🔒 .env 🚫 (auto-hidden)
+├── 📄 .env.development 🚫 (auto-hidden)
+├── 📄 .env.example 🚫 (auto-hidden)
+├── 📄 .env.local 🚫 (auto-hidden)
+├── 📄 .env.production 🚫 (auto-hidden)
+├── 🚫 .gitignore
+├── 📄 .hintrc
+├── 📖 README.md
+├── 📄 components.json
+├── 📄 eslint.config.mjs
+├── 📄 next-env.d.ts 🚫 (auto-hidden)
+├── 📄 next.config.ts
+├── 📄 package-lock.json
+├── 📄 package.json
+├── 📄 postcss.config.mjs
+└── 📄 tsconfig.json
+```
