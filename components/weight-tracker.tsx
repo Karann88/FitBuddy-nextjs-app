@@ -65,7 +65,7 @@ const weightTheme = {
   title: "Weight Management",
   description: "Track your weight and reach your fitness goals",
   icon: "⚖️",
-  gradient: "from-purple-100 via-pink-50 to-rose-100",
+  gradient: "from-purple-100 to-rose-100",
   borderColor: "border-purple-200",
   accentColor: "text-purple-600"
 }
@@ -350,82 +350,100 @@ export function WeightTracker() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-purple-600 mx-auto" />
-          <p className="text-lg font-medium text-purple-700">Loading your wellness dashboard...</p>
+      <div className="flex items-center justify-center h-screen bg-background text-foreground">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="relative">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <Sparkles className="h-6 w-6 text-cyan-400 absolute -top-2 -right-2 animate-pulse" />
+          </div>
+          <span className="text-muted-foreground font-medium">Loading your wellness dashboard...</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6 overflow-auto">
-      <div className="w-full max-w-none mx-auto space-y-6">
+    <div className="min-h-screen w-full bg-background text-foreground p-6 overflow-auto">
+      <div className="w-full mx-auto space-y-8">
         {/* Header Dashboard - matching stretch sequence style */}
-        <Card className={`bg-gradient-to-r ${weightTheme.gradient} ${weightTheme.borderColor} shadow-lg`}>
+        <Card className="bg-card border border-border shadow-md hover:shadow-xl transition-all backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <Sparkles className={`h-6 w-6 ${weightTheme.accentColor}`} />
+                <CardTitle className="flex items-center gap-3 text-3xl">
+                  <div className="p-3 rounded-full bg-primary shadow-lg">
+                    <Sparkles className="h-8 w-8 text-primary-foreground" />
+                  </div>
+                  <Target className="h-6 w-6 text-cyan-600" />
                   Weight & Wellness Dashboard
                 </CardTitle>
-                <CardDescription className="text-lg">Transform your health journey with intelligent tracking</CardDescription>
+                <CardDescription className="text-lg mt-2 text-muted-foreground">Transform your health journey with intelligent tracking</CardDescription>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="text-center">
-                  <div className={`text-2xl font-bold ${weightTheme.accentColor}`}>{streak}</div>
-                  <div className="text-sm text-muted-foreground">Day Streak</div>
+              <div className="flex items-center gap-6">
+                <div className="text-center p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                  <div className="text-3xl font-bold text-primary">{streak}</div>
+                  <div className="text-sm text-muted-foreground font-medium">Day Streak</div>
                 </div>
-                <div className="text-center">
-                  <div className={`text-2xl font-bold ${weightTheme.accentColor}`}>{totalSessions}</div>
-                  <div className="text-sm text-muted-foreground">Sessions</div>
+                <div className="text-center p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                  <div className="text-2xl font-bold text-primary">{totalSessions}</div>
+                  <div className="text-sm text-muted-foreground font-medium">Sessions</div>
                 </div>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="space-y-2">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
-                  <span className="font-medium flex items-center gap-1">
-                    <Target className="h-4 w-4" />
+                  <span className="font-medium flex items-center gap-2">
+                    <Target className="h-4 w-4 text-teal-600" />
                     Goal Progress
                   </span>
-                  <span className="text-muted-foreground">{Math.round(progressToGoal)}%</span>
+                  {/* <span className="text-muted-foreground">{Math.round(progressToGoal)}%</span> */}
+                  <Badge variant="secondary" className="bg-teal-100 text-teal-800">
+                    {Math.round(progressToGoal)}%
+                  </Badge>
                 </div>
-                <Progress value={progressToGoal} className="h-2" />
+                <Progress value={progressToGoal} className="h-3 rounded-full" />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
-                  <span className="font-medium flex items-center gap-1">
-                    <TrendingDown className="h-4 w-4" />
+                  <span className="font-medium flex items-center gap-2">
+                    <TrendingDown className="h-4 w-4 text-orange-600" />
                     Weight Lost
                   </span>
-                  <span className="text-muted-foreground">{totalWeightChange.toFixed(1)} kg</span>
+                  {/* <span className="text-muted-foreground">{totalWeightChange.toFixed(1)} kg</span> */}
+                  <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                    {totalWeightChange.toFixed(1)} kg
+                  </Badge>
                 </div>
-                <Progress value={Math.min((totalWeightChange / 10) * 100, 100)} className="h-2" />
+                <Progress value={Math.min((totalWeightChange / 10) * 100, 100)} className="h-3 rounded-full" />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
-                  <span className="font-medium flex items-center gap-1">
-                    <Activity className="h-4 w-4" />
+                  <span className="font-medium flex items-center gap-2">
+                    <Activity className="h-4 w-4 text-teal-600" />
                     Entries Today
                   </span>
-                  <span className="text-muted-foreground">{todayEntries.length}</span>
+                  {/* <span className="text-muted-foreground">{todayEntries.length}</span> */}
+                  <Badge variant="secondary" className="bg-teal-100 text-teal-800">
+                    {todayEntries.length}
+                  </Badge>
                 </div>
-                <Progress value={(todayEntries.length / 5) * 100} className="h-2" />
+                <Progress value={(todayEntries.length / 5) * 100} className="h-3 rounded-full" />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
-                  <span className="font-medium flex items-center gap-1">
-                    <Heart className="h-4 w-4" />
+                  <span className="font-medium flex items-center gap-2">
+                    <Heart className="h-4 w-4 text-emerald-600" />
                     Health Score
                   </span>
-                  <span className="text-muted-foreground">85%</span>
+                  {/* <span className="text-muted-foreground">85%</span> */}
+                  <Badge variant="secondary" className="bg-emerald-100 text-emerald-800"> 
+                    85%
+                  </Badge>
                 </div>
-                <Progress value={85} className="h-2" />
+                <Progress value={85} className="h-3 rounded-full" />
               </div>
             </div>
           </CardContent>
@@ -433,7 +451,7 @@ export function WeightTracker() {
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Main Weight Tracking Card - matching stretch sequence layout */}
-          <Card className={`lg:col-span-2 bg-gradient-to-br ${weightTheme.gradient} ${weightTheme.borderColor} shadow-xl`}>
+          <Card className="lg:col-span-2 bg-card border-border shadow-2xl backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
@@ -444,38 +462,38 @@ export function WeightTracker() {
                       <div className="text-sm font-normal text-muted-foreground">{weightTheme.title}</div>
                     </div>
                   </CardTitle>
-                  <CardDescription className="text-base">{weightTheme.description}</CardDescription>
+                  <CardDescription className="text-base mt-2">{weightTheme.description}</CardDescription>
                 </div>
-                <Badge className={`${weightStatus.bgClass}`}>
+                <Badge variant="secondary" className={`${weightStatus.bgClass} text-lg px-4 py-2 rounded-full`}>
                   {weightStatus.level}
                 </Badge>
               </div>
             </CardHeader>
 
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-8">
               {/* Enhanced Circular Progress Display - matching stretch sequence timer */}
               <div className="flex flex-col items-center justify-center space-y-6">
                 <div className="relative flex h-64 w-64 items-center justify-center">
                   {/* Outer ring with gradient */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div
-                      className="h-full w-full rounded-full overflow-hidden border-8 border-white/30 shadow-2xl"
+                      className="h-full w-full rounded-full overflow-hidden border-8 border-border shadow-2xl"
                       style={{
                         background: `conic-gradient(from 0deg, #a855f7 0deg, #ec4899 ${progressToGoal * 3.6}deg, #f1f5f9 ${progressToGoal * 3.6}deg, #f1f5f9 360deg)`,
                       }}
                     />
                   </div>
                   {/* Inner circle with enhanced styling */}
-                  <div className="relative flex flex-col items-center justify-center rounded-full bg-white h-52 w-52 shadow-2xl border-4 border-white/50">
-                    <Scale className={`h-12 w-12 mb-3 ${isGoalReached ? 'text-emerald-500' : 'text-purple-500'}`} />
-                    <span className={`text-4xl font-bold ${weightTheme.accentColor}`}>
+                  <div className="relative flex flex-col items-center justify-center rounded-full bg-muted h-52 w-52 shadow-2xl border-4 border-border">
+                    <Scale className={`h-16 w-16 mb-3 ${isGoalReached ? 'text-emerald-500' : 'text-purple-500'}`} />
+                    <span className={`text-5xl font-bold ${weightTheme.accentColor}`}>
                       {currentWeight}<span className="text-2xl text-muted-foreground">kg</span>
                     </span>
-                    <span className="text-sm text-muted-foreground font-medium">
+                    <span className="text-base text-muted-foreground font-medium">
                       current weight
                     </span>
                     {isGoalReached && (
-                      <div className="mt-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium">
+                      <div className="mt-3 px-4 py-2 rounded-full bg-gradient-r from-emerald-100 to-green-100 text-muted text-sm font-medium shadow-md">
                         Goal Achieved!
                       </div>
                     )}
@@ -483,24 +501,24 @@ export function WeightTracker() {
                 </div>
 
                 {/* Enhanced Progress Bar */}
-                <div className="w-full max-w-md space-y-3">
-                  <Progress value={progressToGoal} className="h-4 rounded-full shadow-inner" />
-                  <div className="flex justify-between text-sm font-medium">
-                    <span className="text-muted-foreground">Start: {firstWeight.toFixed(1)} kg</span>
+                <div className="w-full max-w-md space-y-4">
+                  <Progress value={progressToGoal} className="h-6 rounded-full shadow-inner" />
+                  <div className="flex justify-between text-base">
+                    <span className="text-muted-foreground font-medium">Start: {firstWeight.toFixed(1)} kg</span>
                     <span className={`${weightTheme.accentColor}`}>{Math.round(progressToGoal)}% to goal</span>
-                    <span className="text-muted-foreground">Goal: {goalWeight} kg</span>
+                    <span className="text-muted-foreground font-medium">Goal: {goalWeight} kg</span>
                   </div>
                 </div>
               </div>
 
               {/* Motivational Message */}
-              <div className="text-center p-6 bg-white/60 rounded-2xl shadow-inner">
+              <div className="text-center p-6 bg-gradient-to-r from-cyan-500 via-blue-600 to-teal-600 text-white rounded-2xl shadow-inner">
                 <p className="font-bold text-lg text-purple-800">{getMotivationalMessage()}</p>
               </div>
 
               {/* Enhanced Quick Add Buttons */}
               <div className="space-y-6">
-                <h4 className="font-bold text-xl text-center text-purple-800 flex items-center justify-center gap-2">
+                <h4 className="font-bold text-lg text-center text-primary flex items-center justify-center gap-2">
                   <Zap className="h-6 w-6" />
                   Quick Weight Updates
                 </h4>
@@ -509,7 +527,7 @@ export function WeightTracker() {
                     <Button
                       key={option.amount}
                       variant="outline"
-                      className={`flex flex-col items-center gap-4 h-auto p-6 transition-all duration-300 hover:scale-110 hover:shadow-xl ${option.color} border-2 rounded-2xl`}
+                      className={`flex flex-col items-center gap-4 h-auto p-6 transition-all duration-300 hover:scale-110 hover:shadow-lg ${option.color} border-2 rounded-2xl`}
                       onClick={() => handleQuickAdd(option.amount)}
                     >
                       <span className="text-4xl">{option.icon}</span>
@@ -523,8 +541,8 @@ export function WeightTracker() {
               </div>
 
               {/* Enhanced Manual Entry Form */}
-              <div className="space-y-6 p-6 bg-white/80 rounded-2xl border-2 border-purple-200 shadow-xl">
-                <h4 className="font-bold text-xl text-center text-purple-800 flex items-center justify-center gap-2">
+              <div className="space-y-6 p-6 bg-muted rounded-2xl border-2 border-border shadow-xl">
+                <h4 className="font-bold text-xl text-center text-primary flex items-center justify-center gap-2">
                   <Plus className="h-6 w-6" />
                   Manual Entry
                 </h4>
@@ -538,7 +556,7 @@ export function WeightTracker() {
                       value={weight}
                       onChange={(e) => setWeight(e.target.value)}
                       placeholder="Enter weight"
-                      className="h-12 text-lg border-2 border-purple-200 focus:border-purple-400"
+                      className="h-12 text-lg border-2 border-border focus:border-purple-400"
                     />
                   </div>
                   <div className="space-y-3">
@@ -550,7 +568,7 @@ export function WeightTracker() {
                       value={bodyFat}
                       onChange={(e) => setBodyFat(e.target.value)}
                       placeholder="Optional"
-                      className="h-12 text-lg border-2 border-purple-200 focus:border-purple-400"
+                      className="h-12 text-lg border-2 border-border focus:border-purple-400"
                     />
                   </div>
                 </div>
@@ -564,7 +582,7 @@ export function WeightTracker() {
                       value={waist}
                       onChange={(e) => setWaist(e.target.value)}
                       placeholder="Waist"
-                      className="h-10 border-2 border-purple-200 focus:border-purple-400"
+                      className="h-10 border-2 border-border focus:border-purple-400"
                     />
                   </div>
                   <div className="space-y-3">
@@ -576,7 +594,7 @@ export function WeightTracker() {
                       value={chest}
                       onChange={(e) => setChest(e.target.value)}
                       placeholder="Chest"
-                      className="h-10 border-2 border-purple-200 focus:border-purple-400"
+                      className="h-10 border-2 border-border focus:border-purple-400"
                     />
                   </div>
                   <div className="space-y-3">
@@ -588,7 +606,7 @@ export function WeightTracker() {
                       value={hips}
                       onChange={(e) => setHips(e.target.value)}
                       placeholder="Hips"
-                      className="h-10 border-2 border-purple-200 focus:border-purple-400"
+                      className="h-10 border-2 border-border focus:border-purple-400"
                     />
                   </div>
                 </div>
@@ -603,7 +621,7 @@ export function WeightTracker() {
               </div>
             </CardContent>
 
-            <CardFooter className="flex flex-col space-y-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-b-2xl p-6">
+            <CardFooter className="flex flex-col space-y-6 bg-background rounded-b-2xl p-6">
               <div className="flex justify-between w-full items-center">
                 <span className="text-lg font-bold text-purple-800">Weight Goal: {goalWeight} kg</span>
                 <span className="text-base text-muted-foreground">Adjust Your Goal</span>
@@ -626,7 +644,7 @@ export function WeightTracker() {
           {/* Enhanced Sidebar - matching stretch sequence style */}
           <div className="space-y-6">
             {/* Session Stats */}
-            <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200 shadow-lg">
+            <Card className="bg-card border-border shadow-lg backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Award className="h-5 w-5 text-emerald-600" />
@@ -635,8 +653,8 @@ export function WeightTracker() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-emerald-100">
-                  <span className="text-sm text-muted-foreground flex items-center gap-2">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted border border-border backdrop-blur-sm shadow-md">
+                  <span className="text-base text-muted-foreground flex items-center gap-2 font-medium">
                     <Zap className="h-4 w-4 text-orange-500" />
                     Current Streak
                   </span>
@@ -645,32 +663,35 @@ export function WeightTracker() {
                     <span className="text-sm text-muted-foreground">days</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-emerald-100">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted border border-border">
                   <span className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-blue-500" />
+                    <Calendar className="h-4 w-4 text-teal-500" />
                     Total Sessions
                   </span>
                   <span className="font-bold text-lg text-emerald-700">{totalSessions}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-emerald-100">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted border border-border">
                   <span className="text-sm text-muted-foreground flex items-center gap-2">
                     <Clock className="h-4 w-4 text-purple-500" />
                     Entries Today
                   </span>
-                  <span className="font-bold text-lg text-emerald-700">{todayEntries.length}</span>
+                  {/* <span className="font-bold text-lg text-emerald-700">{todayEntries.length}</span> */}
+                  <Badge className="bg-blue-500 text-muted text-sm px-4 py-2">
+                    {todayEntries.length}
+                  </Badge>
                 </div>
               </CardContent>
             </Card>
 
             {/* Achievement Badge */}
-            <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 shadow-lg">
+            <Card className="bg-card border-border shadow-2xl backdrop-blur-sm">
               <CardContent className="p-6 text-center">
                 <Award className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
                 <h3 className="font-bold text-xl text-yellow-800 mb-2">Weight Loss Champion</h3>
                 <p className="text-sm text-yellow-700 mb-4">
                   You&apos;re building amazing healthy habits! Keep up the fantastic work.
                 </p>
-                <Badge className="bg-yellow-500 text-white text-sm px-4 py-2">
+                <Badge className="bg-yellow-500 text-muted text-sm px-4 py-2">
                   {streak} Day Streak 🔥
                 </Badge>
               </CardContent>
@@ -679,24 +700,26 @@ export function WeightTracker() {
         </div>
 
         {/* Enhanced Charts Section */}
-        <Card className="bg-gradient-to-br from-gray-50 to-white border-gray-200 shadow-lg">
+        <Card className="bg-card border-border shadow-2xl backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Activity className="h-6 w-6 text-blue-600" />
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <div className="p-2 rounded-full bg-gradient-to-br from-indigo-500 to-green-500 shadow-lg">
+                <Activity className="h-6 w-6 text-primary animated-pulse" />
+              </div>
               Weight & Measurement Trends
             </CardTitle>
             <CardDescription>Visualize your progress over time with detailed analytics</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="weight" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 bg-gradient-to-r from-indigo-100 to-purple-100 h-auto">
-                <TabsTrigger value="weight" className="text-lg font-bold py-3">Weight</TabsTrigger>
-                <TabsTrigger value="bodyFat" className="text-lg font-bold py-3">Body Fat</TabsTrigger>
-                <TabsTrigger value="measurements" className="text-lg font-bold py-3">Measurements</TabsTrigger>
+            <Tabs defaultValue="weight" className="space-y-4">
+              <TabsList className="grid w-full grid-cols-3 bg-muted text-muted-foreground rounded-md shadow-sm">
+                <TabsTrigger value="weight" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Weight</TabsTrigger>
+                <TabsTrigger value="bodyFat" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Body Fat</TabsTrigger>
+                <TabsTrigger value="measurements" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Measurements</TabsTrigger>
               </TabsList>
               
               <TabsContent value="weight" className="mt-8">
-                <div className="w-full h-[400px] sm:h-[500px] bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 shadow-inner">
+                <div className="w-full h-[400px] sm:h-[500px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData} margin={{ top: 20, right: 40, left: 30, bottom: 20 }}>
                       <defs>
@@ -717,8 +740,8 @@ export function WeightTracker() {
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: '2px solid #d1d5db',
+                          backgroundColor: 'hsl(var(--background))', 
+                          border: '2px solid hsl(var(--border))',
                           borderRadius: '12px',
                           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                           fontSize: '14px',
@@ -742,7 +765,7 @@ export function WeightTracker() {
               </TabsContent>
               
               <TabsContent value="bodyFat" className="mt-8">
-                <div className="w-full h-[400px] sm:h-[500px] bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 shadow-inner">
+                <div className="w-full h-[400px] sm:h-[500px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData} margin={{ top: 20, right: 40, left: 30, bottom: 20 }}>
                       <defs>
@@ -763,8 +786,8 @@ export function WeightTracker() {
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: '2px solid #d1d5db',
+                          backgroundColor: 'hsl(var(--background))', 
+                          border: '2px solid hsl(var(--border))',
                           borderRadius: '12px',
                           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                           fontSize: '14px',
@@ -788,7 +811,7 @@ export function WeightTracker() {
               </TabsContent>
               
               <TabsContent value="measurements" className="mt-8">
-                <div className="w-full h-[400px] sm:h-[500px] bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 shadow-inner">
+                <div className="w-full h-[400px] sm:h-[500px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData} margin={{ top: 20, right: 40, left: 30, bottom: 20 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -803,8 +826,8 @@ export function WeightTracker() {
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: '2px solid #d1d5db',
+                          backgroundColor: 'hsl(var(--background))', 
+                          border: '2px solid hsl(var(--border))',
                           borderRadius: '12px',
                           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                           fontSize: '14px',

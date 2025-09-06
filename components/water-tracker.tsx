@@ -481,25 +481,25 @@ export function WaterTracker() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="flex items-center justify-center h-screen bg-background text-foreground">
         <div className="flex flex-col items-center space-y-4">
           <div className="relative">
-            <Loader2 className="h-12 w-12 animate-spin text-cyan-600" />
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
             <Sparkles className="h-6 w-6 text-cyan-400 absolute -top-2 -right-2 animate-pulse" />
           </div>
-          <span className="text-cyan-700 font-medium">Loading your hydration data...</span>
+          <span className="text-muted-foreground font-medium">Loading your hydration data...</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6 overflow-auto">
+    <div className="min-h-screen w-full bg-background text-foreground p-6 overflow-auto">
       <div className="w-full space-y-8">
         {/* Enhanced Header with Gradient */}
-        <div className="text-center space-y-4 py-8">
+        {/* <div className="text-center space-y-4 py-8">
           <div className="flex items-center justify-center gap-3">
-            <div className="p-3 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg">
+            <div className="p-3 rounded-full bg- shadow-lg">
               <Sparkles className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
@@ -509,27 +509,30 @@ export function WaterTracker() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Track your daily water intake, build healthy habits, and achieve optimal hydration for peak wellness
           </p>
-        </div>
+        </div> */}
 
         {/* Enhanced Overview Dashboard */}
-        <Card className="bg-gradient-to-r from-cyan-100 via-blue-50 to-teal-100 border-cyan-200 shadow-2xl backdrop-blur-sm">
+        <Card className="bg-card border border-border shadow-md hover:shadow-xl transition-all backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-3xl">
+                  <div className="p-3 rounded-full bg-primary shadow-lg">
+                    <Sparkles className="h-8 w-8 text-primary-foreground" />
+                  </div>
                   <Target className="h-6 w-6 text-cyan-600" />
                   Hydration Overview
                   {isGoalReached && <Award className="h-6 w-6 text-yellow-500 animate-bounce" />}
                 </CardTitle>
-                <CardDescription className="text-base mt-2">Your comprehensive hydration metrics and progress tracking</CardDescription>
+                <CardDescription className="text-lg mt-2 text-muted-foreground">Your comprehensive hydration metrics and progress tracking</CardDescription>
               </div>
               <div className="flex items-center gap-6">
-                <div className="text-center p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-cyan-100 shadow-md">
-                  <div className="text-3xl font-bold text-cyan-600">{percentage}%</div>
+                <div className="text-center p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                  <div className="text-3xl font-bold text-primary">{percentage}%</div>
                   <div className="text-sm text-muted-foreground font-medium">Daily Goal</div>
                 </div>
-                <div className="text-center p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-cyan-100 shadow-md">
-                  <div className="text-3xl font-bold text-cyan-600">{streak}</div>
+                <div className="text-center p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                  <div className="text-3xl font-bold text-primary">{streak}</div>
                   <div className="text-sm text-muted-foreground font-medium">Day Streak</div>
                 </div>
               </div>
@@ -537,7 +540,7 @@ export function WaterTracker() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="space-y-3 p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-blue-100 shadow-md">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
                   <span className="font-medium flex items-center gap-2">
                     <Target className="h-4 w-4 text-blue-600" />
@@ -551,7 +554,7 @@ export function WaterTracker() {
                 <p className="text-xs text-muted-foreground">{remainingCups} cups remaining</p>
               </div>
               
-              <div className="space-y-3 p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-teal-100 shadow-md">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
                   <span className="font-medium flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-teal-600" />
@@ -565,7 +568,7 @@ export function WaterTracker() {
                 <p className="text-xs text-muted-foreground">cups per day</p>
               </div>
 
-              <div className="space-y-3 p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-emerald-100 shadow-md">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
                   <span className="font-medium flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-emerald-600" />
@@ -579,7 +582,7 @@ export function WaterTracker() {
                 <p className="text-xs text-muted-foreground">Goal achievement rate</p>
               </div>
 
-              <div className="space-y-3 p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-orange-100 shadow-md">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
                   <span className="font-medium flex items-center gap-2">
                     <Zap className="h-4 w-4 text-orange-600" />
@@ -599,13 +602,13 @@ export function WaterTracker() {
         {/* Main Dashboard */}
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Enhanced Main Water Intake Card */}
-          <Card className="lg:col-span-2 bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 shadow-2xl backdrop-blur-sm">
+          <Card className="lg:col-span-2 bg-card border-border shadow-2xl backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-3 text-2xl">
-                    <div className="p-2 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg">
-                      <Droplets className="h-6 w-6 text-white" />
+                    <div className="p-2 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shadow-lg">
+                      <Droplets className="h-6 w-6 text-muted" />
                     </div>
                     Today&apos;s Hydration Journey
                   </CardTitle>
@@ -624,21 +627,21 @@ export function WaterTracker() {
                   {/* Outer ring with enhanced gradient */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div
-                      className="h-full w-full rounded-full overflow-hidden border-8 border-blue-100 shadow-2xl"
+                      className="h-full w-full rounded-full overflow-hidden border-8 border-border shadow-2xl"
                       style={{
                         background: `conic-gradient(from 0deg, #06b6d4 0deg, #0891b2 ${percentage * 3.6}deg, #e0f7fa ${percentage * 3.6}deg, #e0f7fa 360deg)`,
                       }}
                     />
                   </div>
                   {/* Enhanced inner circle */}
-                  <div className="relative flex flex-col items-center justify-center rounded-full bg-white h-52 w-52 shadow-2xl border-4 border-cyan-100 backdrop-blur-sm">
+                  <div className="relative flex flex-col items-center justify-center rounded-full bg-muted h-52 w-52 shadow-2xl border-4 border-border backdrop-blur-sm">
                     <Droplets className={`h-16 w-16 mb-3 ${isGoalReached ? 'text-emerald-500' : 'text-cyan-500'} drop-shadow-lg`} />
                     <span className="text-5xl font-bold text-cyan-700">
                       {cups}<span className="text-2xl text-muted-foreground">/{goal}</span>
                     </span>
                     <span className="text-base text-muted-foreground font-medium">cups today</span>
                     {isGoalReached && (
-                      <div className="mt-3 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 text-sm font-medium shadow-md">
+                      <div className="mt-3 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-100 to-green-100 text-muted text-sm font-medium shadow-md">
                         🎉 Goal Achieved!
                       </div>
                     )}
@@ -663,19 +666,19 @@ export function WaterTracker() {
 
               {/* Enhanced Quick Add Buttons */}
               <div className="space-y-6">
-                <h4 className="font-semibold text-center text-cyan-800 text-lg">Quick Add Options</h4>
+                <h4 className="font-bold text-center text-cyan-800 text-lg">Quick Add Options</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   {quickAddOptions.map((option) => (
                     <Button
                       key={option.amount}
                       variant="outline"
-                      className={`flex flex-col items-center gap-4 h-auto p-6 transition-all duration-300 hover:shadow-lg ${option.color} border-2`}
+                      className={`flex flex-col items-center gap-4 h-auto p-6 transition-all duration-300 hover:shadow-lg ${option.color} border-2 rounded-2xl`}
                       onClick={() => handleAddCup(option.amount)}
                     >
                       <span className="text-4xl">{option.icon}</span>
                       <div className="text-center">
-                        <div className="text-sm font-bold">{option.label}</div>
-                        <div className="text-xs text-muted-foreground">{option.amount} cup{option.amount !== 1 ? 's' : ''}</div>
+                        <div className="text-sm font-bold text-primary-foreground">{option.label}</div>
+                        <div className="text-xs text-primary-foreground">{option.amount} cup{option.amount !== 1 ? 's' : ''}</div>
                       </div>
                     </Button>
                   ))}
@@ -712,7 +715,7 @@ export function WaterTracker() {
               </div>
             </CardContent>
 
-            <CardFooter className="flex flex-col space-y-6 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-b-lg p-6">
+            <CardFooter className="flex flex-col space-y-6 rounded-b-lg p-6">
               <div className="flex justify-between w-full items-center">
                 <span className="text-base font-semibold text-cyan-800">Daily Goal: {goal} cups</span>
                 <span className="text-base text-muted-foreground font-medium">Adjust Your Goal</span>
@@ -735,17 +738,17 @@ export function WaterTracker() {
           {/* Enhanced Stats Sidebar */}
           <div className="space-y-8">
             {/* Enhanced Today's Stats */}
-            <Card className="bg-gradient-to-br from-teal-50 to-emerald-50 border-teal-200 shadow-2xl backdrop-blur-sm">
+            <Card className="bg-card border-border shadow-2xl backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="p-2 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 shadow-lg">
-                    <Clock className="h-5 w-5 text-white" />
+                  <div className="p-2 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shadow-lg">
+                    <Clock className="h-5 w-5 text-muted" />
                   </div>
                   Today&apos;s Hydration Stats
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-teal-100 shadow-md">
+                <div className="flex items-center justify-between p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <span className="text-base text-muted-foreground flex items-center gap-2 font-medium">
                     <Zap className="h-5 w-5 text-orange-500" />
                     Current Streak
@@ -755,16 +758,16 @@ export function WaterTracker() {
                     <span className="text-sm text-muted-foreground">days</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-teal-100 shadow-md">
+                <div className="flex items-center justify-between p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <span className="text-base text-muted-foreground flex items-center gap-2 font-medium">
-                    <Heart className="h-5 w-5 text-red-500" />
+                    <Heart className="h-5 w-5 text-destructive" />
                     Health Benefits
                   </span>
-                  <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 text-sm px-3 py-1">
+                  <Badge className="bg-emerald-100 text-emerald-800 border-border text-sm px-3 py-1">
                     Active
                   </Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-teal-100 shadow-md">
+                <div className="flex items-center justify-between p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <span className="text-base text-muted-foreground flex items-center gap-2 font-medium">
                     <Award className="h-5 w-5 text-yellow-500" />
                     Achievement
@@ -777,34 +780,34 @@ export function WaterTracker() {
             </Card>
 
             {/* Enhanced Health Benefits */}
-            <Card className="bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200 shadow-2xl backdrop-blur-sm">
+            <Card className="bg-card border-border shadow-2xl backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="p-2 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 shadow-lg">
+                  <div className="p-2 rounded-full bg-muted shadow-lg">
                     <Heart className="h-5 w-5 text-white" />
                   </div>
                   Hydration Benefits
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 text-sm text-muted-foreground">
-                <div className="flex items-start gap-3 p-3 rounded-lg bg-white/80 backdrop-blur-sm border border-emerald-100">
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted backdrop-blur-sm border border-border">
                   <Activity className="h-5 w-5 text-emerald-600 mt-0.5" />
                   <div>
-                    <p className="font-medium text-emerald-800">Improved Energy</p>
+                    <p className="font-bold text-green-800">Improved Energy</p>
                     <p>Proper hydration boosts energy levels and reduces fatigue</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 p-3 rounded-lg bg-white/80 backdrop-blur-sm border border-emerald-100">
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted backdrop-blur-sm border border-border">
                   <Sun className="h-5 w-5 text-yellow-500 mt-0.5" />
                   <div>
-                    <p className="font-medium text-emerald-800">Better Skin</p>
+                    <p className="font-bold text-green-800">Better Skin</p>
                     <p>Hydration helps maintain healthy, glowing skin</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 p-3 rounded-lg bg-white/80 backdrop-blur-sm border border-emerald-100">
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted backdrop-blur-sm border border-border">
                   <Thermometer className="h-5 w-5 text-blue-500 mt-0.5" />
                   <div>
-                    <p className="font-medium text-emerald-800">Temperature Control</p>
+                    <p className="font-bold text-green-800">Temperature Control</p>
                     <p>Water helps regulate your body temperature</p>
                   </div>
                 </div>
@@ -812,11 +815,11 @@ export function WaterTracker() {
             </Card>
 
             {/* Enhanced Today's Log */}
-            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-2xl backdrop-blur-sm">
+            <Card className="bg-card border-border shadow-2xl border-0 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="p-2 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg">
-                    <Calendar className="h-5 w-5 text-white" />
+                <CardTitle className="flex items-center gap-3 text-2xl">
+                  <div className="p-2 rounded-full b-gradient-to-br from-emerald-500 to-teal-500 shadow-lg">
+                    <Calendar className="h-5 w-5 text-muted-foreground" />
                   </div>
                   Today&apos;s Hydration Log
                 </CardTitle>
@@ -825,7 +828,7 @@ export function WaterTracker() {
                 {todayEntries.length > 0 ? (
                   <div className="space-y-3 max-h-48 overflow-y-auto">
                     {todayEntries.slice(-5).reverse().map((entry) => (
-                      <div key={entry.id} className="flex items-center justify-between p-3 rounded-lg bg-white/80 backdrop-blur-sm border border-blue-100 shadow-sm">
+                      <div key={entry.id} className="flex items-center justify-between p-3 rounded-lg bg-muted backdrop-blur-sm border border-border shadow-sm">
                         <div className="flex items-center gap-3">
                           <Droplets className="h-4 w-4 text-blue-500" />
                           <span className="text-sm font-medium">{entry.amount} cup{entry.amount !== 1 ? 's' : ''}</span>
@@ -843,11 +846,11 @@ export function WaterTracker() {
         </div>
 
         {/* Enhanced Analytics Section */}
-        <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-200 shadow-2xl backdrop-blur-sm">
+        <Card className="bg-card border-border shadow-2xl backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-2xl">
-              <div className="p-2 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg">
-                <TrendingUp className="h-6 w-6 text-white" />
+              <div className="p-2 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg">
+                <TrendingUp className="h-6 w-6 text-purple-500" />
               </div>
               Hydration Analytics
             </CardTitle>
@@ -871,7 +874,7 @@ export function WaterTracker() {
                           <stop offset="95%" stopColor="#06b6d4" stopOpacity={0.05}/>
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-10" />
                       <XAxis 
                         dataKey="day" 
                         tick={{ fontSize: 12, fill: "#64748b" }}
@@ -909,7 +912,7 @@ export function WaterTracker() {
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={monthlyData}>
-                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-10" />
                       <XAxis 
                         dataKey="week" 
                         tick={{ fontSize: 12, fill: "#64748b" }}
@@ -938,7 +941,7 @@ export function WaterTracker() {
               
               <TabsContent value="insights" className="space-y-6">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  <Card className="bg-white/80 backdrop-blur-sm border-cyan-200 shadow-md">
+                  <Card className="bg-card backdrop-blur-sm border-border shadow-md">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-lg flex items-center gap-2">
                         <Target className="h-5 w-5 text-cyan-600" />
@@ -946,12 +949,12 @@ export function WaterTracker() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-bold text-cyan-600">{Math.round(weeklyConsistency)}%</div>
+                      <div className="text-3xl font-bold text-muted-forground">{Math.round(weeklyConsistency)}%</div>
                       <p className="text-sm text-muted-foreground">Days you met your goal</p>
                     </CardContent>
                   </Card>
-                  
-                  <Card className="bg-white/80 backdrop-blur-sm border-blue-200 shadow-md">
+
+                  <Card className="bg-card backdrop-blur-sm border-border shadow-md">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-lg flex items-center gap-2">
                         <TrendingUp className="h-5 w-5 text-blue-600" />
@@ -959,12 +962,12 @@ export function WaterTracker() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-bold text-blue-600">{weeklyAverage.toFixed(1)}</div>
+                      <div className="text-3xl font-bold text-primary">{weeklyAverage.toFixed(1)}</div>
                       <p className="text-sm text-muted-foreground">Cups per day this week</p>
                     </CardContent>
                   </Card>
                   
-                  <Card className="bg-white/80 backdrop-blur-sm border-emerald-200 shadow-md">
+                  <Card className="bg-card backdrop-blur-sm border-border shadow-md">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-lg flex items-center gap-2">
                         <Award className="h-5 w-5 text-emerald-600" />
@@ -972,7 +975,7 @@ export function WaterTracker() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-bold text-emerald-600">
+                      <div className="text-3xl font-bold text-primary">
                         {weeklyData.length > 0 ? weeklyData.reduce((max, day) => day.cups > max.cups ? day : max, weeklyData[0]).day : 'N/A'}
                       </div>
                       <p className="text-sm text-muted-foreground">

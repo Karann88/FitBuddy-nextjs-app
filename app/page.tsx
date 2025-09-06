@@ -1,12 +1,7 @@
 import { redirect } from "next/navigation"
-import { checkAuthStatus } from "@/lib/auth"
+import { getServerUser } from "@/lib/auth-server"
 
 export default async function HomePage() {
-  const isAuthenticated = await checkAuthStatus()
-
-  if (isAuthenticated) {
-    redirect("/dashboard")
-  } else {
-    redirect("/auth/login")
-  }
+  const user = await getServerUser()
+  redirect(user ? "/dashboard" : "/auth/login")
 }

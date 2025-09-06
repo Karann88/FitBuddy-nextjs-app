@@ -1,10 +1,8 @@
 // import { supabase } from "./supabase"
-import { createSupabaseBrowserClient } from "@/lib/supabase"
+import { createSupabaseBrowserClient, hasSupabaseEnv } from "@/lib/supabase"
 import { AuthDebug } from "./auth-debug"
 import { getAuthError, type AuthError } from "./auth-errors"
 import type { User } from "@supabase/supabase-js"
-
-const supabase = createSupabaseBrowserClient()
 
 export interface AuthUser {
   id: string
@@ -58,10 +56,22 @@ function convertUser(user: User, profile?: any): AuthUser {
   }
 }
 
+const notConfiguredError = () =>
+  getAuthError({
+    message:
+      "Authentication is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+  })
+
 export async function checkAuthStatus(): Promise<boolean> {
   try {
     AuthDebug.log("Checking auth status...")
 
+    if (!hasSupabaseEnv) {
+      AuthDebug.log("Supabase env missing; treating as logged out")
+      return false
+    }
+
+    const supabase = createSupabaseBrowserClient()
     const { data, error } = await supabase.auth.getSession()
 
     if (error) {
@@ -88,7 +98,16 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   try {
     AuthDebug.log("Getting current user...")
 
-    const { data: { session } } = await supabase.auth.getSession()
+    if (!hasSupabaseEnv) {
+      AuthDebug.log("Supabase env missing; returning null user")
+      return null
+    }
+
+    const supabase = createSupabaseBrowserClient()
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
     if (!session) {
       AuthDebug.log("No session, user is logged out")
       return null
@@ -109,8 +128,6 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       return null
     }
 
-    // AuthDebug.log("User found:", { id: user.id, email: user.email, emailConfirmed: user.email_confirmed_at })
-
     // Get profile data, but don't fail if table doesn't exist
     let profile = null
     try {
@@ -120,9 +137,8 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
         .eq("id", user.id)
         .single()
 
-      if (profileError  && profileError.code !== "PGRST116") {
+      if (profileError && profileError.code !== "PGRST116") {
         AuthDebug.error("Profile fetch error:", profileError)
-        // Continue without profile data
       } else {
         profile = profileData
       }
@@ -140,7 +156,11 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   }
 }
 
-export async function loginUser(email: string, password: string, rememberMe: boolean): Promise<LoginResult> {
+export async function loginUser(
+  email: string,
+  password: string,
+  rememberMe: boolean,
+): Promise<LoginResult> {
   try {
     AuthDebug.log("Attempting login for:", { email, rememberMe })
 
@@ -164,6 +184,17 @@ export async function loginUser(email: string, password: string, rememberMe: boo
         errorDetails: getAuthError(error),
       }
     }
+
+    if (!hasSupabaseEnv) {
+      const authError = notConfiguredError()
+      return {
+        success: false,
+        error: authError.userMessage,
+        errorDetails: authError,
+      }
+    }
+
+    const supabase = createSupabaseBrowserClient()
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email.toLowerCase().trim(),
@@ -209,8 +240,6 @@ export async function loginUser(email: string, password: string, rememberMe: boo
       }
     }
 
-    // AuthDebug.log("Login successful:", { userId: data.user.id, emailConfirmed: data.user.email_confirmed_at })
-
     // Get profile data
     let profile = null
     try {
@@ -227,7 +256,6 @@ export async function loginUser(email: string, password: string, rememberMe: boo
       }
     } catch (profileError) {
       AuthDebug.error("Profile table might not exist:", profileError)
-      // Continue without profile data
     }
 
     const authUser = convertUser(data.user, profile)
@@ -283,6 +311,17 @@ export async function registerUser(data: RegisterData): Promise<RegisterResult> 
       }
     }
 
+    if (!hasSupabaseEnv) {
+      const authError = notConfiguredError()
+      return {
+        success: false,
+        error: authError.userMessage,
+        errorDetails: authError,
+      }
+    }
+
+    const supabase = createSupabaseBrowserClient()
+
     const { data: authData, error } = await supabase.auth.signUp({
       email: data.email.toLowerCase().trim(),
       password: data.password,
@@ -329,7 +368,8 @@ export async function registerUser(data: RegisterData): Promise<RegisterResult> 
       return {
         success: true,
         requiresEmailConfirmation: true,
-        error: "Please check your email and click the confirmation link to complete your registration.",
+        error:
+          "Please check your email and click the confirmation link to complete your registration.",
       }
     }
 
@@ -349,7 +389,11 @@ export async function registerUser(data: RegisterData): Promise<RegisterResult> 
       }
 
       // Get updated profile
-      const { data: profile } = await supabase.from("profiles").select("*").eq("id", authData.user.id).single()
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", authData.user.id)
+        .single()
 
       const authUser = convertUser(authData.user, profile)
       AuthDebug.log("Registration complete with auto-login:", authUser)
@@ -399,9 +443,23 @@ export async function requestPasswordReset(email: string): Promise<PasswordReset
       }
     }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email.toLowerCase().trim(), {
-      redirectTo: `${window.location.origin}/auth/reset-password`,
-    })
+    if (!hasSupabaseEnv) {
+      const authError = notConfiguredError()
+      return {
+        success: false,
+        error: authError.userMessage,
+        errorDetails: authError,
+      }
+    }
+
+    const supabase = createSupabaseBrowserClient()
+
+    const { error } = await supabase.auth.resetPasswordForEmail(
+      email.toLowerCase().trim(),
+      {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      },
+    )
 
     if (error) {
       AuthDebug.logSupabaseError(error)
@@ -426,7 +484,10 @@ export async function requestPasswordReset(email: string): Promise<PasswordReset
   }
 }
 
-export async function resetPassword(token: string, newPassword: string): Promise<PasswordResetResult> {
+export async function resetPassword(
+  token: string,
+  newPassword: string,
+): Promise<PasswordResetResult> {
   try {
     AuthDebug.log("Resetting password with token")
 
@@ -447,6 +508,17 @@ export async function resetPassword(token: string, newPassword: string): Promise
         errorDetails: getAuthError(error),
       }
     }
+
+    if (!hasSupabaseEnv) {
+      const authError = notConfiguredError()
+      return {
+        success: false,
+        error: authError.userMessage,
+        errorDetails: authError,
+      }
+    }
+
+    const supabase = createSupabaseBrowserClient()
 
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
@@ -479,6 +551,17 @@ export async function resendConfirmationEmail(email: string): Promise<PasswordRe
   try {
     AuthDebug.log("Resending confirmation email for:", { email })
 
+    if (!hasSupabaseEnv) {
+      const authError = notConfiguredError()
+      return {
+        success: false,
+        error: authError.userMessage,
+        errorDetails: authError,
+      }
+    }
+
+    const supabase = createSupabaseBrowserClient()
+
     const { error } = await supabase.auth.resend({
       type: "signup",
       email: email.toLowerCase().trim(),
@@ -510,6 +593,13 @@ export async function resendConfirmationEmail(email: string): Promise<PasswordRe
 export async function signOut(): Promise<void> {
   try {
     AuthDebug.log("Signing out user")
+
+    if (!hasSupabaseEnv) {
+      AuthDebug.log("Supabase not configured; treating as signed out")
+      return
+    }
+
+    const supabase = createSupabaseBrowserClient()
     await supabase.auth.signOut()
     AuthDebug.log("Sign out successful")
   } catch (error) {
@@ -517,6 +607,3 @@ export async function signOut(): Promise<void> {
     throw error
   }
 }
-
-
-

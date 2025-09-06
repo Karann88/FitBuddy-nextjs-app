@@ -282,20 +282,20 @@ export function MentalHealthJournal() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="text-center space-y-4">
+      <div className="flex items-center justify-center h-screen bg-background text-foreground">
+        <div className="lfex flex-col items-center space-y-4">
           <div className="relative">
-            <Loader2 className="h-12 w-12 animate-spin text-purple-600 mx-auto" />
-            <div className="absolute inset-0 h-12 w-12 rounded-full bg-purple-200/30 animate-ping mx-auto"></div>
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <Sparkles className="h-6 w-6 text-cyan-400 absolute -top-2 -right-2 animate-pulse" />
           </div>
-          <p className="text-lg font-medium text-purple-700">Loading your wellness journal...</p>
+          <span className="text-muted-foreground font-medium">Loading your wellness journal...</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 overflow-auto">
+    <div className="min-h-screen w-full bg-background p-6 overflow-auto">
       {/* Background decorative elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-300/20 to-pink-300/20 rounded-full blur-3xl"></div>
@@ -303,26 +303,26 @@ export function MentalHealthJournal() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-pink-300/10 to-purple-300/10 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative w-full max-w-none mx-auto space-y-6">
+      <div className="w-full mx-atuo space-y-8">
         {/* Header Dashboard */}
-        <Card className="bg-gradient-to-r from-purple-100 via-pink-50 to-rose-100 border-purple-200 shadow-2xl border-0 backdrop-blur-md">
+        <Card className="bg-card border border-border shadow-md hover:shadow-xl transition-all backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-3 text-3xl font-bold">
-                  <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-lg">
-                    <Sparkles className="h-8 w-8 text-white" />
+                <CardTitle className="flex items-center gap-3 text-3xl">
+                  <div className="p-3 rounded-full bg-primary shadow-lg">
+                    <Sparkles className="h-8 w-8 text-primary-foreground" />
                   </div>
                   Mental Wellness & Journal Dashboard
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Transform your mental health with mindful reflection</CardDescription>
+                <CardDescription className="text-lg mt-2 text-muted-foreground">Transform your mental health with mindful reflection</CardDescription>
               </div>
               <div className="flex items-center gap-6">
-                <div className="text-center">
+                <div className="text-center p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <div className="text-3xl font-bold text-purple-600">{streak}</div>
                   <div className="text-sm text-muted-foreground font-medium">Day Streak</div>
                 </div>
-                <div className="text-center">
+                <div className="text-center p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <div className="text-3xl font-bold text-purple-600">{totalSessions}</div>
                   <div className="text-sm text-muted-foreground font-medium">Sessions</div>
                 </div>
@@ -331,43 +331,55 @@ export function MentalHealthJournal() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="space-y-3">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
-                  <span className="font-semibold flex items-center gap-2">
+                  <span className="font-medium flex items-center gap-2">
                     <BookHeart className="h-4 w-4 text-purple-500" />
                     Total Entries
                   </span>
-                  <span className="text-muted-foreground font-medium">{totalEntries}</span>
+                  {/* <span className="text-muted-foreground font-medium">{totalEntries}</span> */}
+                  <Badge variant="secondary" className="bg-teal-100 text-teal-800">
+                    {totalEntries}
+                  </Badge>
                 </div>
                 <Progress value={Math.min(totalEntries * 10, 100)} className="h-3 rounded-full" />
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md3">
                 <div className="flex justify-between text-sm">
                   <span className="font-semibold flex items-center gap-2">
                     <CalendarIcon className="h-4 w-4 text-blue-500" />
                     This Week
                   </span>
-                  <span className="text-muted-foreground font-medium">{recentEntries}</span>
+                  {/* <span className="text-muted-foreground font-medium">{recentEntries}</span> */}
+                  <Badge variant="secondary" className="bg-teal-100 text-teal-800">
+                    {recentEntries}
+                  </Badge>
                 </div>
                 <Progress value={Math.min(recentEntries * 14.3, 100)} className="h-3 rounded-full" />
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
                   <span className="font-semibold flex items-center gap-2">
                     <Heart className="h-4 w-4 text-pink-500" />
                     Mood Score
                   </span>
-                  <span className="text-muted-foreground font-medium">{averageMoodScore.toFixed(1)}/5</span>
+                  {/* <span className="text-muted-foreground font-medium">{averageMoodScore.toFixed(1)}/5</span> */}
+                  <Badge variant="secondary" className="bg-teal-100 text-teal-800">
+                    {averageMoodScore.toFixed(1)}/5
+                  </Badge>
                 </div>
                 <Progress value={(averageMoodScore / 5) * 100} className="h-3 rounded-full" />
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                 <div className="flex justify-between text-sm">
                   <span className="font-semibold flex items-center gap-2">
                     <Target className="h-4 w-4 text-green-500" />
                     Wellness Score
                   </span>
-                  <span className="text-muted-foreground font-medium">85%</span>
+                  {/* <span className="text-muted-foreground font-medium">85%</span> */}
+                  <Badge variant="secondary" className="bg-teal-100 text-teal-800">
+                    85%
+                  </Badge>
                 </div>
                 <Progress value={85} className="h-3 rounded-full" />
               </div>
@@ -375,23 +387,23 @@ export function MentalHealthJournal() {
           </CardContent>
         </Card>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-3">
           {/* New Journal Entry Card */}
-          <Card className="w-full bg-gradient-to-br from-blue-100 via-cyan-50 to-sky-100 border-blue-200 shadow-2xl border-0 backdrop-blur-md">
+          <Card className="lg:col-span-2 bg-card border-border shadow-2xl backdrop-blur-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl">
-                <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg">
-                  <Edit3 className="h-6 w-6 text-white" />
+                <div className="p-2 bg-muted-foreground rounded-full shadow-lg">
+                  <Edit3 className="h-6 w-6 text-muted" />
                 </div>
                 New Journal Entry
               </CardTitle>
-              <CardDescription className="text-lg">Express your thoughts and feelings in a safe space</CardDescription>
+              <CardDescription className="text-base mt-2">Express your thoughts and feelings in a safe space</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-8">
               {/* Date Selection */}
               <div className="space-y-3">
                 <Label htmlFor="date" className="text-sm font-semibold flex items-center gap-2">
-                  <CalendarIcon className="h-4 w-4 text-blue-500" />
+                  <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                   Date
                 </Label>
                 <div className="flex justify-center">
@@ -399,7 +411,7 @@ export function MentalHealthJournal() {
                     mode="single" 
                     selected={selectedDate} 
                     onSelect={setSelectedDate} 
-                    className="rounded-xl border border-blue-200 bg-white/80 backdrop-blur-sm shadow-lg" 
+                    className="rounded-xl border border-border bg-muted backdrop-blur-sm shadow-lg" 
                   />
                 </div>
               </div>
@@ -412,7 +424,7 @@ export function MentalHealthJournal() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Give your entry a meaningful title..."
-                  className="w-full h-12 text-lg bg-white/80 backdrop-blur-sm border-blue-200 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl"
+                  className="w-full h-12 text-lg bg-primary backdrop-blur-sm border-border focus:border-blue-400 focus:ring-blue-400/20 rounded-xl"
                 />
               </div>
 
@@ -424,7 +436,7 @@ export function MentalHealthJournal() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Write freely about your thoughts, feelings, experiences, and reflections. This is your safe space..."
-                  className="min-h-[140px] resize-none bg-white/80 backdrop-blur-sm border-blue-200 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl"
+                  className="min-h-[140px] resize-none bg-primary backdrop-blur-sm border-border focus:border-blue-400 focus:ring-blue-400/20 rounded-xl"
                 />
               </div>
 
@@ -442,7 +454,7 @@ export function MentalHealthJournal() {
                       className={`h-16 w-full text-3xl hover:scale-105 transition-all duration-200 rounded-xl ${
                         mood === moodEmoji 
                           ? "bg-blue-600 hover:bg-blue-700 shadow-lg" 
-                          : "hover:bg-blue-50 border-blue-200 bg-white/60 backdrop-blur-sm"
+                          : "hover:bg-blue-50 border-border bg-muted backdrop-blur-sm"
                       }`}
                       onClick={() => setMood(moodEmoji)}
                     >
@@ -469,7 +481,7 @@ export function MentalHealthJournal() {
                     value={tag}
                     onChange={(e) => setTag(e.target.value)}
                     placeholder="Add tags (e.g., work, family, exercise, gratitude)"
-                    className="flex-1 bg-white/80 backdrop-blur-sm border-blue-200 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl"
+                    className="flex-1 bg-muted backdrop-blur-sm border-border focus:border-blue-400 focus:ring-blue-400/20 rounded-xl"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault()
@@ -481,7 +493,7 @@ export function MentalHealthJournal() {
                     onClick={handleAddTag} 
                     variant="outline" 
                     size="icon"
-                    className="border-blue-200 hover:bg-blue-50 bg-white/60 backdrop-blur-sm rounded-xl"
+                    className="border-border hover:bg-blue-50 bg-muted backdrop-blur-sm rounded-xl"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -517,7 +529,7 @@ export function MentalHealthJournal() {
                           key={suggestedTag}
                           variant="ghost"
                           size="sm"
-                          className="h-6 px-2 text-xs text-muted-foreground hover:bg-blue-50 bg-white/40 backdrop-blur-sm rounded-lg"
+                          className="h-6 px-2 text-xs text-muted-foreground hover:bg-blue-50 bg-muted backdrop-blur-sm rounded-lg"
                           onClick={() => {
                             if (!tags.includes(suggestedTag)) {
                               setTags([...tags, suggestedTag])
@@ -536,7 +548,7 @@ export function MentalHealthJournal() {
               <Button 
                 onClick={handleSaveEntry} 
                 disabled={!title || !content || !selectedDate || isSaving} 
-                className="w-full h-14 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
+                className="w-full h-14 bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800 text-muted font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
                 size="lg"
               >
                 {isSaving ? (
@@ -555,11 +567,11 @@ export function MentalHealthJournal() {
           </Card>
 
           {/* Journal Entries and Analytics Card */}
-          <Card className="w-full bg-gradient-to-br from-emerald-100 via-teal-50 to-cyan-100 border-emerald-200 shadow-2xl border-0 backdrop-blur-md">
+          <Card className="w-full bg-card border-border shadow-2xl border-0 backdrop-blur-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl">
                 <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg">
-                  <Eye className="h-6 w-6 text-white" />
+                  <Eye className="h-6 w-6 text-muted" />
                 </div>
                 Your Journal
               </CardTitle>
@@ -571,23 +583,23 @@ export function MentalHealthJournal() {
                   placeholder="Search entries..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="flex-1 bg-white/80 backdrop-blur-sm border-emerald-200 focus:border-emerald-400 focus:ring-emerald-400/20 rounded-xl"
+                  className="flex-1 bg-muted backdrop-blur-sm border-border focus:border-emerald-400 focus:ring-emerald-400/20 rounded-xl"
                 />
-                <Button variant="outline" size="icon" className="border-emerald-200 hover:bg-emerald-50 bg-white/60 backdrop-blur-sm rounded-xl">
+                <Button variant="outline" size="icon" className="border-border hover:bg-emerald-100 bg-muted backdrop-blur-sm rounded-xl">
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
 
               {selectedEntry ? (
                 <div className="space-y-4">
-                  <Button variant="ghost" size="sm" onClick={handleCloseEntry} className="mb-2 hover:bg-emerald-50">
+                  <Button variant="ghost" size="sm" onClick={handleCloseEntry} className="mb-2 text-primary font-semibold hover:bg-pink-100">
                     ← Back to entries
                   </Button>
 
-                  <div className="p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-emerald-200 shadow-lg">
+                  <div className="p-6 bg-muted backdrop-blur-sm rounded-2xl border border-border shadow-lg">
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-xl font-bold text-emerald-800">{selectedEntry.title}</h3>
+                        <h3 className="text-xl font-bold text-primary">{selectedEntry.title}</h3>
                         <p className="text-sm text-muted-foreground mt-1">
                           {format(parseISO(selectedEntry.date), "MMMM d, yyyy")}
                         </p>
@@ -600,13 +612,13 @@ export function MentalHealthJournal() {
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-emerald-100 p-4 min-h-[150px] bg-white/50 backdrop-blur-sm mb-4">
-                      <p className="text-gray-700 leading-relaxed">{selectedEntry.content}</p>
+                    <div className="rounded-xl border border-border p-4 min-h-[150px] bg-muted backdrop-blur-sm mb-4">
+                      <p className="text-accent-foreground leading-relaxed">{selectedEntry.content}</p>
                     </div>
 
                     <div className="flex flex-wrap gap-2 mb-4">
                       {selectedEntry.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="bg-teal-100 text-teal-800 border-teal-200">
+                        <Badge key={tag} variant="secondary" className="bg-teal-100 text-teal-800 border-border">
                           <Tag className="mr-1 h-3 w-3" />
                           {tag}
                         </Badge>
@@ -630,11 +642,11 @@ export function MentalHealthJournal() {
                       filteredEntries.map((entry) => (
                         <div
                           key={entry.id}
-                          className="flex items-center justify-between rounded-xl border border-emerald-200 p-4 cursor-pointer hover:bg-emerald-50/80 bg-white/60 backdrop-blur-sm transition-all duration-200 hover:shadow-md"
+                          className="flex items-center justify-between rounded-xl border border-border p-4 cursor-pointer hover:bg-emerald-50/80 bg-muted backdrop-blur-sm transition-all duration-200 hover:shadow-md"
                           onClick={() => handleViewEntry(entry)}
                         >
                           <div>
-                            <div className="font-semibold text-emerald-800">{entry.title}</div>
+                            <div className="font-semibold text-muted">{entry.title}</div>
                             <div className="text-xs text-muted-foreground mt-1">
                               {format(parseISO(entry.date), "MMMM d, yyyy")}
                             </div>
@@ -645,8 +657,8 @@ export function MentalHealthJournal() {
                         </div>
                       ))
                     ) : (
-                      <div className="text-center text-muted-foreground py-8 bg-white/40 backdrop-blur-sm rounded-xl border border-emerald-200">
-                        <BookHeart className="h-12 w-12 mx-auto mb-3 text-emerald-300" />
+                      <div className="text-center text-muted-foreground py-8 bg-muted backdrop-blur-sm rounded-xl border border-border">
+                        <BookHeart className="h-12 w-12 mx-auto mb-3 text-muted" />
                         <p>No entries found</p>
                       </div>
                     )}
@@ -654,10 +666,10 @@ export function MentalHealthJournal() {
 
                   <div className="pt-4">
                     <h4 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                      <Activity className="h-5 w-5 text-emerald-600" />
+                      <Activity className="h-5 w-5 text-pink-500" />
                       Mood Distribution
                     </h4>
-                    <div className="h-[250px] bg-white/60 backdrop-blur-sm rounded-2xl border border-emerald-200 p-4">
+                    <div className="h-[300px] backdrop-blur-sm rounded-2xl border border-border p-4">
                       {moodData.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
@@ -668,7 +680,7 @@ export function MentalHealthJournal() {
                               outerRadius={80}
                               dataKey="count"
                               nameKey="name"
-                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                              label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                             >
                               {moodData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -676,8 +688,8 @@ export function MentalHealthJournal() {
                             </Pie>
                             <Tooltip 
                               contentStyle={{
-                                backgroundColor: 'white',
-                                border: '1px solid #d1fae5',
+                                backgroundColor: 'hsl(var(--primary))',
+                                border: '1px solid hsl(var(--border))',
                                 borderRadius: '12px',
                                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
                               }}
@@ -701,7 +713,7 @@ export function MentalHealthJournal() {
                       <Tag className="h-5 w-5 text-emerald-600" />
                       Common Tags
                     </h4>
-                    <div className="flex flex-wrap gap-2 p-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-emerald-200">
+                    <div className="flex flex-wrap gap-2 p-4 bg-muted backdrop-blur-sm rounded-2xl border border-border">
                       {allTags.length > 0 ? (
                         allTags.map((tag) => (
                           <Badge 
@@ -725,11 +737,11 @@ export function MentalHealthJournal() {
         </div>
 
         {/* Mood Trends Analytics Section */}
-        <Card className="w-full bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 border-indigo-200 shadow-2xl border-0 backdrop-blur-md">
+        <Card className="w-full bg-card border-border shadow-2xl border-0 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-2xl">
+            <CardTitle className="flex items-center gap-3 text-xl">
               <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg">
-                <BarChart3 className="h-6 w-6 text-white" />
+                <BarChart3 className="h-6 w-6 text-muted" />
               </div>
               Mood Trends & Analytics
             </CardTitle>
@@ -737,25 +749,25 @@ export function MentalHealthJournal() {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Mood Trend Insight */}
-            <div className="p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-indigo-200 shadow-lg">
+            <div className="p-4 bg-muted backdrop-blur-sm rounded-2xl border border-border shadow-lg">
               <h4 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-indigo-600" />
+                <TrendingUp className="h-5 w-5 text-purple-500" />
                 Trend Insight
               </h4>
-              <p className="text-indigo-800 font-medium">{moodTrendInsight}</p>
+              <p className="text-secondary-foreground font-medium">{moodTrendInsight}</p>
             </div>
 
             {/* Mood Trends Charts */}
             <Tabs defaultValue="weekly" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-indigo-100 to-purple-100 h-auto">
-                <TabsTrigger value="weekly" className="text-lg font-bold py-3">7 Days</TabsTrigger>
-                <TabsTrigger value="monthly" className="text-lg font-bold py-3">30 Days</TabsTrigger>
-                <TabsTrigger value="quarterly" className="text-lg font-bold py-3">90 Days</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 mb-6">
+                <TabsTrigger value="weekly" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">7 Days</TabsTrigger>
+                <TabsTrigger value="monthly" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">30 Days</TabsTrigger>
+                <TabsTrigger value="quarterly" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">90 Days</TabsTrigger>
               </TabsList>
               
               <TabsContent value="weekly" className="mt-8">
-                <div className="w-full h-[400px] bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 shadow-inner">
-                  <h3 className="text-xl font-bold text-indigo-800 mb-4 text-center">Weekly Mood Trend</h3>
+                <div className="w-full h-[400px] p-6 rounded-lg border shadow-sm">
+                  <h3 className="text-xl font-bold text-orange-800 mb-4 text-center">Weekly Mood Trend</h3>
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={weeklyTrendData} margin={{ top: 20, right: 40, left: 30, bottom: 20 }}>
                       <defs>
@@ -780,8 +792,8 @@ export function MentalHealthJournal() {
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: '2px solid #c7d2fe',
+                          backgroundColor: 'hsl(var(--background))', 
+                          border: '2px solid hsl(var(--border))',
                           borderRadius: '12px',
                           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                           fontSize: '14px',
@@ -814,7 +826,7 @@ export function MentalHealthJournal() {
               </TabsContent>
               
               <TabsContent value="monthly" className="mt-8">
-                <div className="w-full h-[400px] bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 shadow-inner">
+                <div className="w-full h-[400px] p-6 rounded-lg border shadow-sm">
                   <h3 className="text-xl font-bold text-purple-800 mb-4 text-center">Monthly Mood Trend</h3>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={monthlyTrendData} margin={{ top: 20, right: 40, left: 30, bottom: 20 }}>
@@ -834,8 +846,8 @@ export function MentalHealthJournal() {
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: '2px solid #ddd6fe',
+                          backgroundColor: 'hsl(var(--background))',  
+                          border: '2px solid hsl(var(--border))',
                           borderRadius: '12px',
                           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                           fontSize: '14px',
@@ -867,7 +879,7 @@ export function MentalHealthJournal() {
               </TabsContent>
               
               <TabsContent value="quarterly" className="mt-8">
-                <div className="w-full h-[400px] bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl p-6 shadow-inner">
+                <div className="w-full h-[400px] p-6 rounded-lg border shadow-sm">
                   <h3 className="text-xl font-bold text-pink-800 mb-4 text-center">Quarterly Mood Trend</h3>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={quarterlyTrendData} margin={{ top: 20, right: 40, left: 30, bottom: 20 }}>
@@ -887,8 +899,8 @@ export function MentalHealthJournal() {
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: '2px solid #fce7f3',
+                          backgroundColor: 'hsl(var(--background))',  
+                          border: '2px solid hsl(var(--border))',
                           borderRadius: '12px',
                           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                           fontSize: '14px',
@@ -922,19 +934,19 @@ export function MentalHealthJournal() {
 
             {/* Mood Statistics Summary */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-indigo-200 shadow-lg text-center">
-                <div className="text-2xl font-bold text-indigo-600 mb-1">
+              <div className="p-4 bg-muted backdrop-blur-sm rounded-2xl border border-border shadow-lg text-center">
+                <div className="text-2xl font-bold text-muted-foreground mb-1">
                   {weeklyTrendData.filter(d => d.moodScore !== null).length}
                 </div>
                 <div className="text-sm text-muted-foreground">Days This Week</div>
               </div>
-              <div className="p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-200 shadow-lg text-center">
+              <div className="p-4 bg-muted backdrop-blur-sm rounded-2xl border border-border shadow-lg text-center">
                 <div className="text-2xl font-bold text-purple-600 mb-1">
                   {averageMoodScore.toFixed(1)}
                 </div>
                 <div className="text-sm text-muted-foreground">Average Mood</div>
               </div>
-              <div className="p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-pink-200 shadow-lg text-center">
+              <div className="p-4 bg-muted backdrop-blur-sm rounded-2xl border border-border shadow-lg text-center">
                 <div className="text-2xl font-bold text-pink-600 mb-1">
                   {entries.filter(e => {
                     const moodScore = { "😢": 1, "😔": 2, "😐": 3, "🙂": 4, "😊": 5 }[e.mood_emoji as MoodEmoji]
@@ -943,7 +955,7 @@ export function MentalHealthJournal() {
                 </div>
                 <div className="text-sm text-muted-foreground">Happy Days</div>
               </div>
-              <div className="p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-rose-200 shadow-lg text-center">
+              <div className="p-4 bg-muted backdrop-blur-sm rounded-2xl border border-border shadow-lg text-center">
                 <div className="text-2xl font-bold text-rose-600 mb-1">
                   {Math.max(...weeklyTrendData.filter(d => d.entryCount > 0).map(d => d.entryCount), 0)}
                 </div>

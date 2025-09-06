@@ -5,31 +5,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Activity, 
-  Droplets, 
-  Heart, 
-  Moon, 
-  Scale, 
-  Utensils,  
-  TrendingUp, 
-  Target, 
-  Award, 
-  Zap, 
+import {
+  Activity,
+  Droplets,
+  Heart,
+  Moon,
+  Scale,
+  Utensils,
+  TrendingUp,
+  Target,
+  Award,
+  Zap,
   Calendar,
   Loader2,
   Sparkles,
 } from "lucide-react"
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar,
   Area,
   AreaChart,
 } from "recharts"
@@ -325,7 +321,7 @@ export function HealthDashboard() {
   ]
 
   const healthScore = healthMetrics.reduce((score, metric) => {
-    const progress = metric.inverse 
+    const progress = metric.inverse
       ? Math.max(0, 100 - Math.abs((metric.value - metric.target) / metric.target * 100))
       : Math.min((metric.value / metric.target) * 100, 100)
     return score + (progress * metric.weight)
@@ -342,430 +338,489 @@ export function HealthDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="sr-only">Loading dashboard...</span>
+      <div className="flex items-center justify-center h-screen bg-background text-foreground">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="relative">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Sparkles className="h-6 w-6 text-cyan-400 absolute -top-2 -right-2 animate-pulse" />
+          </div>
+          <span className="text-muted-forground font-medium">Loading dashboard...</span>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6 overflow-auto">
-      {/* Health Overview Dashboard */}
-      <Card className="bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 border-emerald-200 shadow-lg">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-3 text-2xl">
-                <Sparkles className="h-6 w-6 text-emerald-600" />
-                Health Overview Dashboard
-              </CardTitle>
-              <CardDescription className="text-lg">Your comprehensive health metrics and wellness tracking</CardDescription>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-600">{Math.round(healthScore)}%</div>
-              <div className="text-sm text-muted-foreground">Health Score</div>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="font-medium flex items-center gap-1">
-                  <Award className="h-4 w-4" />
-                  Health Score
-                </span>
-                <span className="text-muted-foreground">{Math.round(healthScore)}%</span>
-              </div>
-              <Progress value={healthScore} className="h-2" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="font-medium flex items-center gap-1">
-                  <Target className="h-4 w-4" />
-                  Goals Met Today
-                </span>
-                <span className="text-muted-foreground">{goalsMetToday}/6</span>
-              </div>
-              <Progress value={(goalsMetToday / 6) * 100} className="h-2" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="font-medium flex items-center gap-1">
-                  <TrendingUp className="h-4 w-4" />
-                  Weekly Trend
-                </span>
-                <span className="text-muted-foreground">+{Math.round(healthScore - 65)}%</span>
-              </div>
-              <Progress value={Math.min(healthScore + 10, 100)} className="h-2" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="font-medium flex items-center gap-1">
-                  <Zap className="h-4 w-4" />
-                  Active Streak
-                </span>
-                <span className="text-muted-foreground">{Math.max(1, goalsMetToday)} days</span>
-              </div>
-              <Progress value={Math.min(goalsMetToday * 16.7, 100)} className="h-2" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="min-h-screen w-full bg-background p-6 overflow-auto">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-300/20 to-pink-300/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-indigo-300/20 to-purple-300/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-pink-300/10 to-purple-300/10 rounded-full blur-3xl"></div>
+      </div>
 
-      {/* Charts Section */}
-      <Card className="bg-gradient-to-br from-slate-50 to-gray-50 border-slate-200 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-slate-600" />
-            Weekly Analytics & Trends
-          </CardTitle>
-          <CardDescription>Detailed view of your health metrics over the past week</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="activity" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-6 bg-white shadow-sm">
-              <TabsTrigger value="activity" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-                <Activity className="h-4 w-4 mr-1" />
-                Activity
-              </TabsTrigger>
-              <TabsTrigger value="sleep" className="data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-700">
-                <Moon className="h-4 w-4 mr-1" />
-                Sleep
-              </TabsTrigger>
-              <TabsTrigger value="water" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700">
-                <Droplets className="h-4 w-4 mr-1" />
-                Water
-              </TabsTrigger>
-              <TabsTrigger value="nutrition" className="data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700">
-                <Utensils className="h-4 w-4 mr-1" />
-                Nutrition
-              </TabsTrigger>
-              <TabsTrigger value="weight" className="data-[state=active]:bg-green-100 data-[state=active]:text-green-700">
-                <Scale className="h-4 w-4 mr-1" />
-                Weight
-              </TabsTrigger>
-              <TabsTrigger value="mood" className="data-[state=active]:bg-rose-100 data-[state=active]:text-rose-700">
-                <Heart className="h-4 w-4 mr-1" />
-                Mood
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="activity" className="space-y-4">
-              <div className="h-[350px] p-4 bg-white rounded-lg border shadow-sm">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={dashboardData}>
-                    <defs>
-                      <linearGradient id="stepsGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                      </linearGradient>
-                      <linearGradient id="exerciseGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="day" stroke="#64748b" />
-                    <YAxis stroke="#64748b" />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                      }}
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="steps" 
-                      stroke="#8b5cf6" 
-                      strokeWidth={3}
-                      fill="url(#stepsGradient)" 
-                      name="Steps"
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="exercise" 
-                      stroke="#ef4444" 
-                      strokeWidth={2}
-                      fill="url(#exerciseGradient)" 
-                      name="Exercise (min)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="sleep" className="space-y-4">
-              <div className="h-[350px] p-4 bg-white rounded-lg border shadow-sm">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={dashboardData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="day" stroke="#64748b" />
-                    <YAxis stroke="#64748b" />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                      }}
-                    />
-                    <Bar dataKey="sleep" fill="#6366f1" name="Sleep (hours)" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="water" className="space-y-4">
-              <div className="h-[350px] p-4 bg-white rounded-lg border shadow-sm">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={dashboardData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="day" stroke="#64748b" />
-                    <YAxis stroke="#64748b" />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                      }}
-                    />
-                    <Bar dataKey="water" fill="#3b82f6" name="Water (cups)" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="nutrition" className="space-y-4">
-              <div className="h-[350px] p-4 bg-white rounded-lg border shadow-sm">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={dashboardData}>
-                    <defs>
-                      <linearGradient id="caloriesGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="day" stroke="#64748b" />
-                    <YAxis stroke="#64748b" />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                      }}
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="calories" 
-                      stroke="#f97316" 
-                      strokeWidth={3}
-                      fill="url(#caloriesGradient)" 
-                      name="Calories"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="weight" className="space-y-4">
-              <div className="h-[350px] p-4 bg-white rounded-lg border shadow-sm">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={dashboardData.filter((d) => d.weight !== null)}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="day" stroke="#64748b" />
-                    <YAxis stroke="#64748b" />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                      }}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="weight" 
-                      stroke="#10b981" 
-                      strokeWidth={3}
-                      name="Weight (kg)" 
-                      dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="mood" className="space-y-4">
-              <div className="h-[350px] p-4 bg-white rounded-lg border shadow-sm">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={dashboardData.filter((d) => d.mood !== null)}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="day" stroke="#64748b" />
-                    <YAxis domain={[0, 5]} stroke="#64748b" />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                      }}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="mood" 
-                      stroke="#f43f5e" 
-                      strokeWidth={3}
-                      name="Mood (1-5)" 
-                      dot={{ fill: '#f43f5e', strokeWidth: 2, r: 4 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      {/* Metrics Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {/* Today's Mood */}
-        <Card className="bg-gradient-to-br from-rose-50 to-pink-50 border-rose-200 hover:shadow-lg transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today&apos;s Mood</CardTitle>
-            <Heart className="h-5 w-5 text-rose-500" />
-          </CardHeader>
-          <CardContent className="space-y-3">
+      <div className="w-full space-y-6">
+        {/* Health Overview Dashboard */}
+        <Card className="bg-card border-border shadow-md hover:shadow-xl transition-all backdrop-blur-sm">
+          <CardHeader>
             <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold">{todayStats.mood.emoji} {todayStats.mood.status}</div>
-              <Badge className="bg-rose-100 text-rose-800 border-rose-200">{todayStats.mood.value}/5</Badge>
+              <div>
+                <CardTitle className="flex items-center gap-3 text-2xl">
+                  <div className="p-3 rounded-full bg-primary shadow-lg">
+                    <Sparkles className="h-8 w-8 text-primary-foreground" />
+                  </div>
+                  Health Overview Dashboard
+                </CardTitle>
+                <CardDescription className="text-lg mt-2 text-muted-foreground">Your comprehensive health metrics and wellness tracking</CardDescription>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="text-center p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                  <div className="text-3xl font-bold text-purple-600">{Math.round(healthScore)}%</div>
+                  <div className="text-sm text-muted-foreground font-medium">Health Score</div>
+                </div>
+              </div>
             </div>
-            <Progress value={(todayStats.mood.value / 5) * 100} className="h-2" />
-            <p className="text-xs text-muted-foreground">
-              {todayStats.mood.value >= 4 ? "Positive mood streak!" : "Track your mood daily for insights"}
-            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium flex items-center gap-2">
+                    <Award className="h-4 w-4 text-purple-500" />
+                    Health Score
+                  </span>
+                  {/* <span className="text-muted-foreground">{Math.round(healthScore)}%</span> */}
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                    {Math.round(healthScore)}%
+                  </Badge>
+                </div>
+                <Progress value={healthScore} className="h-3 rounded-full" />
+              </div>
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium flex items-center gap-2">
+                    <Target className="h-4 w-4 text-blue-500" />
+                    Goals Met Today
+                  </span>
+                  {/* <span className="text-muted-foreground">{goalsMetToday}/6</span> */}
+                  <Badge variant="secondary" className="bg-teal-100 text-teal-800">
+                    {goalsMetToday}/6
+                  </Badge>
+                </div>
+                <Progress value={(goalsMetToday / 6) * 100} className="h-3 rounded-full" />
+              </div>
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-green-500" />
+                    Weekly Trend
+                  </span>
+                  {/* <span className="text-muted-foreground">+{Math.round(healthScore - 65)}%</span> */}
+                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    +{Math.round(healthScore - 65)}%
+                  </Badge>
+                </div>
+                <Progress value={Math.min(healthScore + 10, 100)} className="h-3 rounded-full" />
+              </div>
+              <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-yellow-500" />
+                    Active Streak
+                  </span>
+                  {/* <span className="text-muted-foreground">{Math.max(1, goalsMetToday)} days</span> */}
+                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                    {Math.max(1, goalsMetToday)} days
+                  </Badge>
+                </div>
+                <Progress value={Math.min(goalsMetToday * 16.7, 100)} className="h-3 rounded-full" />
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Water Intake */}
-        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 hover:shadow-lg transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Water Intake</CardTitle>
-            <Droplets className="h-5 w-5 text-blue-500" />
+        {/* Charts Section */}
+        <Card className="bg-card border-border shadow-2xl backdrop-blur-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <Calendar className="h-5 w-5 text-primary" />
+              Weekly Analytics & Trends
+            </CardTitle>
+            <CardDescription>Detailed view of your health metrics over the past week</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold">{todayStats.water.current}/{todayStats.water.goal}</div>
-              <Badge className="bg-blue-100 text-blue-800 border-blue-200">{todayStats.water.percentage}%</Badge>
-            </div>
-            <Progress value={todayStats.water.percentage} className="h-2" />
-            <p className="text-xs text-muted-foreground">
-              {todayStats.water.percentage >= 100 
-                ? "Great hydration today!" 
-                : `${todayStats.water.goal - todayStats.water.current} more cups to reach daily goal`}
-            </p>
+          <CardContent>
+            <Tabs defaultValue="activity" className="space-y-4">
+              <TabsList className="grid w-full grid-cols-6 bg-muted text-muted-foreground rounded-md shadow-sm">
+                <TabsTrigger value="activity" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                  <Activity className="h-4 w-4 mr-1" />
+                  Activity
+                </TabsTrigger>
+                <TabsTrigger value="sleep" className="data-[state=active]:bg-gray-100 data-[state=active]:text-primary">
+                  <Moon className="h-4 w-4 mr-1" />
+                  Sleep
+                </TabsTrigger>
+                <TabsTrigger value="water" className="data-[state=active]:bg-gray-100 data-[state=active]:text-primary">
+                  <Droplets className="h-4 w-4 mr-1" />
+                  Water
+                </TabsTrigger>
+                <TabsTrigger value="nutrition" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                  <Utensils className="h-4 w-4 mr-1" />
+                  Nutrition
+                </TabsTrigger>
+                <TabsTrigger value="weight" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                  <Scale className="h-4 w-4 mr-1" />
+                  Weight
+                </TabsTrigger>
+                <TabsTrigger value="mood" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                  <Heart className="h-4 w-4 mr-1" />
+                  Mood
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="activity" className="space-y-4">
+                <div className="h-[350px] p-4 rounded-lg border shadow-sm">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={dashboardData}>
+                      <defs>
+                        <linearGradient id="exerciseGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis dataKey="day" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--background))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="exercise"
+                        stroke="#ef4444"
+                        strokeWidth={2}
+                        fill="url(#exerciseGradient)"
+                        name="Exercise (min)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="sleep" className="space-y-4">
+                <div className="h-[350px] p-4 rounded-lg border shadow-sm">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={dashboardData}>
+                      <defs>
+                        <linearGradient id="sleepGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="day" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--background))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="sleep" 
+                        name="Sleep (hours)" 
+                        stroke="#6366f1" 
+                        strokeWidth={3} 
+                        fill="url(#sleepGradient)" 
+                        // dot={{ fill: '#6366f1', strokeWidth: 2, r: 4 }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="water" className="space-y-4">
+                <div className="h-[350px] p-4 rounded-lg border shadow-sm">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={dashboardData}>
+                      <defs>
+                        <linearGradient id="waterGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis dataKey="day" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--background))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="water" 
+                        fill="url(#waterGradient)" 
+                        name="Water (cups)" 
+                        stroke="#10b981" 
+                        strokeWidth={3} 
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="nutrition" className="space-y-4">
+                <div className="h-[350px] p-4 rounded-lg border shadow-sm">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={dashboardData}>
+                      <defs>
+                        <linearGradient id="caloriesGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis dataKey="day" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--background))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="calories"
+                        stroke="#f97316"
+                        strokeWidth={3}
+                        fill="url(#caloriesGradient)"
+                        name="Calories"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="weight" className="space-y-4">
+                <div className="h-[350px] p-4 rounded-lg border shadow-sm">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={dashboardData}>
+                      <defs>
+                        <linearGradient id="weightGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis dataKey="day" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--background))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="weight"
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        fill="url(#weightGradient)"
+                        name="Weight (kg)"
+                        // dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="mood" className="space-y-4">
+                <div className="h-[350px] p-4 rounded-lg border shadow-sm">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={dashboardData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <defs>
+                        <linearGradient id="moodGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="day" stroke="#64748b" />
+                      <YAxis domain={[0, 5]} stroke="#64748b" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--background))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="mood"
+                        stroke="#f43f5e"
+                        strokeWidth={3}
+                        fill="url(#moodGradient)"
+                        name="Mood (1-5)"
+                        // dot={{ fill: '#f43f5e', strokeWidth: 2, r: 4 }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
 
-        {/* Sleep Quality */}
-        <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-200 hover:shadow-lg transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Sleep Quality</CardTitle>
-            <Moon className="h-5 w-5 text-indigo-500" />
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold">{todayStats.sleep.hours}h</div>
-              <Badge className="bg-indigo-100 text-indigo-800 border-indigo-200">
-                {todayStats.sleep.quality ? `${todayStats.sleep.quality}/5` : "No data"}
-              </Badge>
-            </div>
-            <Progress value={(todayStats.sleep.hours / 8) * 100} className="h-2" />
-            <p className="text-xs text-muted-foreground">{todayStats.sleep.status}</p>
-          </CardContent>
-        </Card>
-
-        {/* Weight Tracking */}
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 hover:shadow-lg transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Weight Tracking</CardTitle>
-            <Scale className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold">
-                {todayStats.weight.current ? `${todayStats.weight.current}kg` : "No data"}
+        {/* Metrics Grid */}
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {/* Today's Mood */}
+          <Card className="bg-card border-border shadow-xl hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">Today&apos;s Mood</CardTitle>
+              <Heart className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">{todayStats.mood.emoji} {todayStats.mood.status}</div>
+                <Badge className="bg-rose-100 text-rose-800 border-border">{todayStats.mood.value}/5</Badge>
               </div>
-              {todayStats.weight.change !== null && (
-                <Badge className={`${
-                  todayStats.weight.change > 0 
-                    ? "bg-red-100 text-red-800 border-red-200" 
-                    : todayStats.weight.change < 0 
-                    ? "bg-green-100 text-green-800 border-green-200"
-                    : "bg-gray-100 text-gray-800 border-gray-200"
-                }`}>
-                  {todayStats.weight.change > 0 ? "+" : ""}{todayStats.weight.change}kg
+              <Progress value={(todayStats.mood.value / 5) * 100} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {todayStats.mood.value >= 4 ? "Positive mood streak!" : "Track your mood daily for insights"}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Water Intake */}
+          <Card className="bg-card border-border shadow-xl hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Water Intake</CardTitle>
+              <Droplets className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">{todayStats.water.current}/{todayStats.water.goal}</div>
+                <Badge className="bg-blue-100 text-blue-800 border-border">{todayStats.water.percentage}%</Badge>
+              </div>
+              <Progress value={todayStats.water.percentage} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {todayStats.water.percentage >= 100
+                  ? "Great hydration today!"
+                  : `${todayStats.water.goal - todayStats.water.current} more cups to reach daily goal`}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Sleep Quality */}
+          <Card className="bg-card border-border shadow-xl hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Sleep Quality</CardTitle>
+              <Moon className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">{todayStats.sleep.hours}h</div>
+                <Badge className="bg-indigo-100 text-indigo-800 border-border">
+                  {todayStats.sleep.quality ? `${todayStats.sleep.quality}/5` : "No data"}
                 </Badge>
-              )}
-            </div>
-            <Progress value={todayStats.weight.current ? 75 : 0} className="h-2" />
-            <p className="text-xs text-muted-foreground">
-              {todayStats.weight.change !== null 
-                ? `${Math.abs(todayStats.weight.change)}kg ${todayStats.weight.change > 0 ? "increase" : "decrease"} from yesterday`
-                : "Track your weight daily for trends"}
-            </p>
-          </CardContent>
-        </Card>
+              </div>
+              <Progress value={(todayStats.sleep.hours / 8) * 100} className="h-2" />
+              <p className="text-xs text-muted-foreground">{todayStats.sleep.status}</p>
+            </CardContent>
+          </Card>
 
-        {/* Nutrition */}
-        <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200 hover:shadow-lg transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Nutrition</CardTitle>
-            <Utensils className="h-5 w-5 text-orange-500" />
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold">{todayStats.calories.consumed}</div>
-              <Badge className="bg-orange-100 text-orange-800 border-orange-200">
-                {Math.round((todayStats.calories.consumed / 2200) * 100)}%
-              </Badge>
-            </div>
-            <Progress value={(todayStats.calories.consumed / 2200) * 100} className="h-2" />
-            <p className="text-xs text-muted-foreground">
-              {todayStats.calories.remaining > 0 
-                ? `${todayStats.calories.remaining} calories remaining today`
-                : "Daily calorie goal reached!"}
-            </p>
-          </CardContent>
-        </Card>
+          {/* Weight Tracking */}
+          <Card className="bg-card border-border shadow-xl hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Weight Tracking</CardTitle>
+              <Scale className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">
+                  <Badge className="bg-orange-100 text-orange-800 border-border">
+                    {todayStats.weight.current ? `${todayStats.weight.current}kg` : "No data"}
+                  </Badge>
+                </div>
+                {todayStats.weight.change !== null && (
+                  <Badge className={`${todayStats.weight.change > 0
+                    ? "bg-red-100 text-red-800 border-red-200"
+                    : todayStats.weight.change < 0
+                      ? "bg-green-100 text-green-800 border-green-200"
+                      : "bg-gray-100 text-gray-800 border-gray-200"
+                    }`}>
+                    {todayStats.weight.change > 0 ? "+" : ""}{todayStats.weight.change}kg
+                  </Badge>
+                )}
+              </div>
+              <Progress value={todayStats.weight.current ? 75 : 0} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {todayStats.weight.change !== null
+                  ? `${Math.abs(todayStats.weight.change)}kg ${todayStats.weight.change > 0 ? "increase" : "decrease"} from yesterday`
+                  : "Track your weight daily for trends"}
+              </p>
+            </CardContent>
+          </Card>
 
-        {/* Exercise & Activity */}
-        <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 hover:shadow-lg transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Exercise & Activity</CardTitle>
-            <Activity className="h-5 w-5 text-purple-500" />
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold">{todayStats.exercise.duration}min</div>
-              <Badge className="bg-purple-100 text-purple-800 border-purple-200">
-                {todayStats.exercise.sessions} sessions
-              </Badge>
-            </div>
-            <Progress value={(todayStats.exercise.duration / 60) * 100} className="h-2" />
-            <p className="text-xs text-muted-foreground">
-              {todayStats.exercise.duration >= 30 
-                ? "Great workout today!" 
-                : `${60 - todayStats.exercise.duration} more minutes to reach daily goal`}
-            </p>
-          </CardContent>
-        </Card>
+          {/* Nutrition */}
+          <Card className="bg-card border-border shadow-xl hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Nutrition</CardTitle>
+              <Utensils className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">{todayStats.calories.consumed}</div>
+                <Badge className="bg-orange-100 text-orange-800 border-orange-200">
+                  {Math.round((todayStats.calories.consumed / 2200) * 100)}%
+                </Badge>
+              </div>
+              <Progress value={(todayStats.calories.consumed / 2200) * 100} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {todayStats.calories.remaining > 0
+                  ? `${todayStats.calories.remaining} calories remaining today`
+                  : "Daily calorie goal reached!"}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Exercise & Activity */}
+          <Card className="bg-card border-border shadow-xl hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Exercise & Activity</CardTitle>
+              <Activity className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">{todayStats.exercise.duration}min</div>
+                <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+                  {todayStats.exercise.sessions} sessions
+                </Badge>
+              </div>
+              <Progress value={(todayStats.exercise.duration / 60) * 100} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {todayStats.exercise.duration >= 30
+                  ? "Great workout today!"
+                  : `${60 - todayStats.exercise.duration} more minutes to reach daily goal`}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )

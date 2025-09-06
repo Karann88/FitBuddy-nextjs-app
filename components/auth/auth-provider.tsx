@@ -3,7 +3,7 @@
 import type React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { createSupabaseBrowserClient } from "@/lib/supabase"
+import { createSupabaseBrowserClient, hasSupabaseEnv } from "@/lib/supabase"
 import { getCurrentUser } from "@/lib/auth"
 import { AuthUser } from "@/lib/auth"
 
@@ -34,6 +34,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = !!user
 
   useEffect(() => {
+    if (!hasSupabaseEnv) {
+      // If Supabase isn't configured, treat as logged out and don't attempt any auth calls
+      setUser(null)
+      setIsLoading(false)
+      return
+    }
+
     const supabase = createSupabaseBrowserClient()
 
     // Get initial session
@@ -94,11 +101,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      const supabase = createSupabaseBrowserClient()
-      const { error } = await supabase.auth.signOut()
-
-      if (error) {
-        console.error("Error signing out:", error.message)
+      if (hasSupabaseEnv) {
+        const supabase = createSupabaseBrowserClient()
+        const { error } = await supabase.auth.signOut()
+        if (error) {
+          console.error("Error signing out:", error.message)
+        }
       }
       setUser(null)
       router.push("/auth/login")
@@ -121,4 +129,3 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
-

@@ -14,6 +14,7 @@ import { validatePassword } from "@/lib/validation"
 import { createSupabaseBrowserClient } from "@/lib/supabase"
 
 export function ResetPasswordForm() {
+  const supabase = createSupabaseBrowserClient()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -28,14 +29,13 @@ export function ResetPasswordForm() {
     special: false,
   })
 
-  const supabase = createSupabaseBrowserClient()
 
   const router = useRouter()
   // const searchParams = useSearchParams()
   // const token = searchParams.get("token")
 
   useEffect(() => {
-    const { data: subscription } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (event === "PASSWORD_RECOVERY" && session) {
           // Handle password recovery event
@@ -44,7 +44,7 @@ export function ResetPasswordForm() {
       }
     )
     return () => {
-      subscription.subscription.unsubscribe()
+      subscription.unsubscribe()
     }
   }, [router, supabase])
 

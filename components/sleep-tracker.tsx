@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,8 +14,6 @@ import { Moon, Plus, Star, Clock, Target, TrendingUp, CloudMoon, Sun, Calendar a
 import { format, parseISO, subDays, addDays } from "date-fns"
 import { createSupabaseBrowserClient, type SleepEntry } from "@/lib/supabase"
 // import { createClient } from '@supabase/supabase-js'
-
-const supabase = createSupabaseBrowserClient()
 
 interface SleepData {
   date: string
@@ -34,6 +32,8 @@ const SLEEP_GOALS = {
 }
 
 export function SleepTracker() {
+
+  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
   // State management
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [bedtime, setBedtime] = useState("22:30")
@@ -84,7 +84,7 @@ export function SleepTracker() {
       if (error) throw error
 
       setSleepEntries(data || [])
-      
+
       // Transform data for charts
       const transformedData = (data || []).map(entry => ({
         date: format(parseISO(entry.date), 'MMM dd'),
@@ -100,7 +100,7 @@ export function SleepTracker() {
     } finally {
       setLoading(false)
     }
-  }, [currentUser, calculateSleepHours])
+  }, [currentUser, supabase, calculateSleepHours])
 
   // Get current user
   useEffect(() => {
@@ -109,14 +109,36 @@ export function SleepTracker() {
       setCurrentUser(user?.id || 'demo-user-id') // Fallback for demo
     }
     getCurrentUser()
-  }, [])
+  }, [supabase])
 
   // Fetch data when user is available
   useEffect(() => {
     if (currentUser) {
       fetchSleepEntries()
     }
-  }, [currentUser, fetchSleepEntries])
+
+    // Add real-time subscription
+    const channel = supabase
+      .channel(`dashboard_sleep_${currentUser}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'sleep_entries',
+          filter: `user_id=eq.${currentUser}`
+        },
+        () => {
+          fetchSleepEntries()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+
+  }, [currentUser, fetchSleepEntries, supabase])
 
   // Get sleep entry for selected date
   const getSelectedDateEntry = useCallback(() => {
@@ -180,7 +202,7 @@ export function SleepTracker() {
 
       // Refresh data
       await fetchSleepEntries()
-      
+
       // Show success message
       setError(null)
     } catch (err) {
@@ -192,11 +214,11 @@ export function SleepTracker() {
 
   // Calculate current sleep hours and averages
   const sleepHours = calculateSleepHours(bedtime, wakeTime)
-  const averageSleepHours = sleepData.length > 0 
-    ? sleepData.reduce((sum, day) => sum + day.hours, 0) / sleepData.length 
+  const averageSleepHours = sleepData.length > 0
+    ? sleepData.reduce((sum, day) => sum + day.hours, 0) / sleepData.length
     : 0
-  const averageQuality = sleepData.length > 0 
-    ? sleepData.reduce((sum, day) => sum + day.quality, 0) / sleepData.length 
+  const averageQuality = sleepData.length > 0
+    ? sleepData.reduce((sum, day) => sum + day.quality, 0) / sleepData.length
     : 0
 
   const handleQualityChange = (value: number[]) => {
@@ -239,8 +261,22 @@ export function SleepTracker() {
   const StatusIcon = durationStatus.icon
   const selectedEntry = getSelectedDateEntry()
 
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen bg-background text-forground">
+  //       <div className="flex flex-col items-center space-y-4">
+  //         <div className="relative">
+  //           <Loader2 className="h-12 w-12 animate-spin text-primary" />
+  //           <Sparkles className="h-6 w-6 text-cyan-400 absolute -top-2 -right-2 animate-pulse" />
+  //         </div>
+  //         <span className="text-muted-foreground font-medium">Loading sleep data...</span>
+  //       </div>
+  //     </div>
+  //   )
+  // }
+
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 overflow-auto">
+    <div className="min-h-screen w-full bg-background p-6 overflow-auto">
       {/* Background decorative elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-300/20 to-purple-300/20 rounded-full blur-3xl"></div>
@@ -248,7 +284,7 @@ export function SleepTracker() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-300/10 to-indigo-300/10 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative w-full max-w-7xl mx-auto space-y-6">
+      <div className="w-full mx-auto space-y-8">
         {/* Error Display */}
         {error && (
           <Card className="border-red-200 bg-red-50/80 backdrop-blur-sm shadow-lg border-0">
@@ -262,21 +298,23 @@ export function SleepTracker() {
         )}
 
         {/* Sleep Goals Overview */}
-        <Card className="bg-gradient-to-r from-indigo-100 via-purple-50 to-blue-100 border-indigo-200 shadow-2xl border-0 backdrop-blur-md">
+        <Card className="bg-card border border-border shadow-md hover:shadow-xl transition-all backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-3 text-3xl font-bold">
-                  <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl shadow-lg">
-                    <Sparkles className="h-8 w-8 text-white" />
+                  <div className="p-3 rounded-full bg-primary shadow-lg">
+                    <Sparkles className="h-8 w-8 text-primary-foreground" />
                   </div>
                   Sleep Wellness Dashboard
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Track your progress towards optimal sleep health and recovery</CardDescription>
+                <CardDescription className="text-lg mt-2 text-muted-foreground">Track your progress towards optimal sleep health and recovery</CardDescription>
               </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-indigo-600">{averageQuality.toFixed(1)}/5</div>
-                <div className="text-sm text-muted-foreground font-medium">Sleep Quality</div>
+              <div className="flex items-center gap-6">
+                <div className="text-center p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
+                  <div className="text-3xl font-bold text-primary">{averageQuality.toFixed(1)}/5</div>
+                  <div className="text-sm text-muted-foreground font-medium">Sleep Quality</div>
+                </div>
               </div>
             </div>
           </CardHeader>
@@ -291,35 +329,35 @@ export function SleepTracker() {
               </div>
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="space-y-3">
+                <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <div className="flex justify-between text-sm">
-                    <span className="font-semibold flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-indigo-500" />
+                    <span className="font-medium flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-primary" />
                       Sleep Duration
                     </span>
                     <span className="text-muted-foreground font-medium">{averageSleepHours.toFixed(1)}h / {SLEEP_GOALS.targetHours}h</span>
                   </div>
-                  <Progress 
-                    value={Math.min((averageSleepHours / SLEEP_GOALS.targetHours) * 100, 100)} 
+                  <Progress
+                    value={Math.min((averageSleepHours / SLEEP_GOALS.targetHours) * 100, 100)}
                     className="h-3 rounded-full"
                   />
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <div className="flex justify-between text-sm">
-                    <span className="font-semibold flex items-center gap-2">
+                    <span className="font-medium flex items-center gap-2">
                       <Star className="h-4 w-4 text-yellow-500" />
                       Sleep Quality
                     </span>
                     <span className="text-muted-foreground font-medium">{averageQuality.toFixed(1)} / 5</span>
                   </div>
-                  <Progress 
-                    value={(averageQuality / 5) * 100} 
+                  <Progress
+                    value={(averageQuality / 5) * 100}
                     className="h-3 rounded-full"
                   />
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <div className="flex justify-between text-sm">
-                    <span className="font-semibold flex items-center gap-2">
+                    <span className="font-medium flex items-center gap-2">
                       <Target className="h-4 w-4 text-green-500" />
                       Consistency
                     </span>
@@ -327,9 +365,9 @@ export function SleepTracker() {
                   </div>
                   <Progress value={sleepEntries.length > 0 ? (sleepEntries.length / 30) * 100 : 0} className="h-3 rounded-full" />
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3 p-4 rounded-xl bg-muted backdrop-blur-sm border border-border shadow-md">
                   <div className="flex justify-between text-sm">
-                    <span className="font-semibold flex items-center gap-2">
+                    <span className="font-medium flex items-center gap-2">
                       <TrendingUp className="h-4 w-4 text-purple-500" />
                       Weekly Score
                     </span>
@@ -344,22 +382,22 @@ export function SleepTracker() {
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Sleep Calendar */}
-          <Card className="w-full bg-gradient-to-br from-emerald-100 via-teal-50 to-emerald-50 border-emerald-200 shadow-2xl border-0 backdrop-blur-md">
+          <Card className="bg-card border-border shadow-2xl backdrop-blur-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl">
-                <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg">
-                  <CalendarIcon className="h-6 w-6 text-white" />
+                <div className="p-2 bg-muted rounded-all shadow-lg">
+                  <CalendarIcon className="h-6 w-6 text-muted-foreground" />
                 </div>
                 Sleep Calendar
               </CardTitle>
-              <CardDescription className="text-lg">Select a date to view or log sleep data</CardDescription>
+              <CardDescription className="text-base mt-2">Select a date to view or log sleep data</CardDescription>
             </CardHeader>
             <CardContent>
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={(date) => date && setSelectedDate(date)}
-                className="rounded-xl border border-emerald-200 bg-white/80 backdrop-blur-sm shadow-lg"
+                className="rounded-xl border border-border bg-muted backdrop-blur-sm shadow-lg"
                 modifiers={{
                   hasData: (date) => hasDataForDate(date),
                   excellent: (date) => getQualityForDate(date) === 5,
@@ -400,10 +438,10 @@ export function SleepTracker() {
           </Card>
 
           {/* Sleep Logging Card */}
-          <Card className="w-full bg-gradient-to-br from-slate-100 via-indigo-50 to-slate-50 border-slate-200 shadow-2xl border-0 backdrop-blur-md">
+          <Card className="bg-card border-border shadow-2xl backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-2xl">
-                <div className="p-2 bg-gradient-to-br from-slate-500 to-indigo-500 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 rounded-full bg-gradient-to-br from-slate-500 to-indigo-500 rounded-lg">
                   <CloudMoon className="h-6 w-6 text-white" />
                 </div>
                 {selectedEntry ? 'Edit Sleep Entry' : 'Log Sleep Entry'}
@@ -421,12 +459,12 @@ export function SleepTracker() {
                     <Moon className="h-4 w-4 text-indigo-500" />
                     Bedtime
                   </Label>
-                  <Input 
-                    id="bedtime" 
-                    type="time" 
-                    value={bedtime} 
+                  <Input
+                    id="bedtime"
+                    type="time"
+                    value={bedtime}
                     onChange={(e) => setBedtime(e.target.value)}
-                    className="w-full h-12 text-lg bg-white/80 backdrop-blur-sm border-indigo-200 focus:border-indigo-400 focus:ring-indigo-400/20 rounded-xl"
+                    className="w-full h-12 text-lg bg-muted backdrop-blur-sm border-border focus:border-indigo-400 focus:ring-indigo-400/20 rounded-xl"
                   />
                 </div>
                 <div className="space-y-3">
@@ -434,12 +472,12 @@ export function SleepTracker() {
                     <Sun className="h-4 w-4 text-yellow-500" />
                     Wake Time
                   </Label>
-                  <Input 
-                    id="waketime" 
-                    type="time" 
-                    value={wakeTime} 
+                  <Input
+                    id="waketime"
+                    type="time"
+                    value={wakeTime}
                     onChange={(e) => setWakeTime(e.target.value)}
-                    className="w-full h-12 text-lg bg-white/80 backdrop-blur-sm border-indigo-200 focus:border-indigo-400 focus:ring-indigo-400/20 rounded-xl"
+                    className="w-full h-12 text-lg bg-muted backdrop-blur-sm border-border focus:border-indigo-400 focus:ring-indigo-400/20 rounded-xl"
                   />
                 </div>
               </div>
@@ -475,11 +513,11 @@ export function SleepTracker() {
               </div>
 
               {/* Sleep Duration Display */}
-              <div className="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-indigo-200">
+              <div className="p-4 bg-mute backdrop-blur-sm rounded-xl border border-border">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <StatusIcon className={`h-5 w-5 ${durationStatus.color}`} />
-                    <span className="font-semibold">Sleep Duration</span>
+                    <span className="font-medium">Sleep Duration</span>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold">{sleepHours.toFixed(1)}h</div>
@@ -489,8 +527,8 @@ export function SleepTracker() {
               </div>
 
               {/* Save Button */}
-              <Button 
-                onClick={handleLogSleep} 
+              <Button
+                onClick={handleLogSleep}
                 disabled={saving}
                 className="w-full h-12 text-lg bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-300"
               >
@@ -510,10 +548,10 @@ export function SleepTracker() {
           </Card>
 
           {/* Sleep Analytics Card */}
-          <Card className="w-full bg-gradient-to-br from-purple-100 via-pink-50 to-purple-50 border-purple-200 shadow-2xl border-0 backdrop-blur-md">
+          <Card className="bg-card border-border shadow-2xl backdrop-blur-md">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-2xl">
-                <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 bg-muted rounded-full shadow-lg">
                   <TrendingUp className="h-6 w-6 text-white" />
                 </div>
                 Sleep Analytics
@@ -536,55 +574,55 @@ export function SleepTracker() {
                   {/* Sleep Hours Chart */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                      <h4 className="text-sm font-semibold text-primary flex items-center gap-2">
                         <Clock className="h-4 w-4" />
                         Sleep Duration Trend
                       </h4>
-                      <Badge variant="outline" className="text-xs bg-white/80 backdrop-blur-sm">
+                      <Badge variant="outline" className="text-xs bg-muted-foreground backdrop-blur-sm">
                         Last {sleepData.length} days
                       </Badge>
                     </div>
-                    <div className="h-[200px] w-full p-4 bg-white/80 backdrop-blur-sm rounded-xl border shadow-lg">
+                    <div className="h-[200px] w-full p-4 bg-muted backdrop-blur-sm rounded-xl border shadow-lg">
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={sleepData.slice(-7)} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                           <defs>
                             <linearGradient id="sleepGradient" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4}/>
-                              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.1}/>
+                              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4} />
+                              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.1} />
                             </linearGradient>
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                          <XAxis 
-                            dataKey="date" 
+                          <XAxis
+                            dataKey="date"
                             tick={{ fontSize: 12 }}
                             axisLine={false}
                             tickLine={false}
                             stroke="#64748b"
                           />
-                          <YAxis 
-                            domain={[0, 10]} 
+                          <YAxis
+                            domain={[0, 10]}
                             tick={{ fontSize: 12 }}
                             axisLine={false}
                             tickLine={false}
                             width={30}
                             stroke="#64748b"
                           />
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'white',
-                              border: '1px solid #e2e8f0',
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: 'hsl(var(--background))',
+                              border: '1px solid hsl(var(--border))',
                               borderRadius: '12px',
                               fontSize: '12px',
                               boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'
                             }}
                             formatter={(value: number) => [`${value.toFixed(1)} hours`, 'Sleep Duration']}
                           />
-                          <Area 
-                            type="monotone" 
-                            dataKey="hours" 
-                            stroke="#8b5cf6" 
+                          <Area
+                            type="monotone"
+                            dataKey="hours"
+                            stroke="#8b5cf6"
                             strokeWidth={3}
-                            fill="url(#sleepGradient)" 
+                            fill="url(#sleepGradient)"
                           />
                         </AreaChart>
                       </ResponsiveContainer>
@@ -594,48 +632,48 @@ export function SleepTracker() {
                   {/* Sleep Quality Chart */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                      <h4 className="text-sm font-semibold text-primary flex items-center gap-2">
                         <Star className="h-4 w-4" />
                         Sleep Quality Trend
                       </h4>
                     </div>
-                    <div className="h-[140px] w-full p-4 bg-white/80 backdrop-blur-sm rounded-xl border shadow-lg">
+                    <div className="h-[140px] w-full p-4 bg-muted backdrop-blur-sm rounded-xl border shadow-lg">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={sleepData.slice(-7)} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                           <defs>
                             <linearGradient id="qualityGradient" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
-                              <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.3}/>
+                              <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8} />
+                              <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.3} />
                             </linearGradient>
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                          <XAxis 
-                            dataKey="date" 
+                          <XAxis
+                            dataKey="date"
                             tick={{ fontSize: 12 }}
                             axisLine={false}
                             tickLine={false}
                             stroke="#64748b"
                           />
-                          <YAxis 
-                            domain={[0, 5]} 
+                          <YAxis
+                            domain={[0, 5]}
                             tick={{ fontSize: 12 }}
                             axisLine={false}
                             tickLine={false}
                             width={20}
                             stroke="#64748b"
                           />
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'white',
-                              border: '1px solid #e2e8f0',
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: 'hsl(var(--background))',
+                              border: '1px solid hsl(var(--border))',
                               borderRadius: '12px',
                               fontSize: '12px',
                               boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'
                             }}
                             formatter={(value: number) => [`${value}/5`, 'Quality']}
                           />
-                          <Bar 
-                            dataKey="quality" 
+                          <Bar
+                            dataKey="quality"
                             fill="url(#qualityGradient)"
                             radius={[4, 4, 0, 0]}
                           />
@@ -655,7 +693,7 @@ export function SleepTracker() {
           </Card>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 
