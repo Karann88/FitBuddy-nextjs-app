@@ -838,7 +838,7 @@ export function MealTracker() {
                   const mealConfig = MEAL_TYPES[meal.meal_type]
                   const Icon = mealConfig.icon
                   return (
-                    <div key={meal.id} className="flex items-center justify-between p-4 rounded-lg border-border hover:shadow-lg transition-all duration-300 backdrop-blur-sm">
+                    <div key={meal.id} className="flex items-center justify-between bg-background p-4 rounded-lg border-border hover:shadow-lg transition-all duration-300 backdrop-blur-sm">
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                           <span className="text-2xl">{mealConfig.emoji}</span>
