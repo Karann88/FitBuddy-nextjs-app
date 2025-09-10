@@ -46,13 +46,16 @@
 // }
 
 
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs"
+import { createServerSupabaseClient } from "@/lib/auth-server"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 export async function middleware(req: NextRequest) {
+  // Prepare response so Supabase can update cookies (refresh tokens etc.)
   const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
+
+  // Use the centralized Supabase client from auth-server.ts
+  const supabase = await createServerSupabaseClient()
 
   // Check the current session
   const {
@@ -69,11 +72,9 @@ export async function middleware(req: NextRequest) {
 
   if (!session && !isPublicRoute) {
     // Not signed in → redirect to login
-    if (!pathname.startsWith("/auth")) {
       const loginUrl = new URL("/auth/login", req.url)
       loginUrl.searchParams.set("redirectedFrom", pathname)
       return NextResponse.redirect(loginUrl)
-    }
   }
 
   if (session && pathname.startsWith("/auth")) {
