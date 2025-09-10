@@ -69,9 +69,11 @@ export async function middleware(req: NextRequest) {
 
   if (!session && !isPublicRoute) {
     // Not signed in → redirect to login
-    const loginUrl = new URL("/auth/login", req.url)
-    loginUrl.searchParams.set("redirectedFrom", pathname)
-    return NextResponse.redirect(loginUrl)
+    if (!pathname.startsWith("/auth")) {
+      const loginUrl = new URL("/auth/login", req.url)
+      loginUrl.searchParams.set("redirectedFrom", pathname)
+      return NextResponse.redirect(loginUrl)
+    }
   }
 
   if (session && pathname.startsWith("/auth")) {
