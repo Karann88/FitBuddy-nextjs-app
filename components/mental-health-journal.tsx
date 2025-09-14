@@ -592,7 +592,7 @@ export function MentalHealthJournal() {
 
               {selectedEntry ? (
                 <div className="space-y-4">
-                  <Button variant="ghost" size="sm" onClick={handleCloseEntry} className="mb-2 text-primary font-semibold hover:bg-pink-100">
+                  <Button variant={"destructive"} size="sm" onClick={handleCloseEntry} className="mb-2 text-primary font-semibold hover:bg-pink-100">
                     ← Back to entries
                   </Button>
 
