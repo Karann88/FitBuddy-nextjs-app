@@ -45,16 +45,16 @@
 //   ],
 // }
 
-import { createServerSupabaseClient } from "@/lib/auth-server";
+import { createRequestSupabaseClient } from "@/lib/auth-server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   // Prepare response so Supabase can update cookies (refresh tokens etc.)
   const res = NextResponse.next();
-
-  // Use the centralized Supabase client from auth-server.ts
-  const supabase = await createServerSupabaseClient();
+  
+  // Use request-aware client so that any refreshed cookies are written to the response
+  const supabase = createRequestSupabaseClient(req, res);
 
   // Check the current session
   const {
@@ -80,7 +80,7 @@ export async function middleware(req: NextRequest) {
     // Already signed in → prevent access to login/signup
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
-  // Continue to requested route
+  // Continue to requested route. Return the same response so any cookie updates persist
   return res;
 }
 

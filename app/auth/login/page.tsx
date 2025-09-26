@@ -1,32 +1,52 @@
-// "use client"
-// import dynamic from "next/dynamic";
-import { redirect } from "next/navigation"
-import { getServerUser } from "@/lib/auth-server"
+"use client"
+
+import { Suspense, useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { LoginForm } from "@/components/auth/login-form"
 import { AuthLayout } from "@/components/auth/auth-layout"
 
-// Render LoginForm only on the client (no SSR), so no hydration mismatch disappears
-// const LoginForm = dynamic(() => import("@/components/auth/login-form").then((mod) => mod.LoginForm), { ssr: false })
+export const dynamic = "force-dynamic"
 
-export default async function LoginPage() {
+function LoginPageContent() {
+  const searchParams = useSearchParams()
+  const oauthError = searchParams.get("error") || undefined
 
-  const serverUser = await getServerUser()
-
-  if (serverUser) {
-    // User is already logged in, redirect to dashboard
-    redirect("/dashboard")
-  }
   return (
     <AuthLayout
       title="Welcome back"
-      subtitle="Sign in to your wellness account"
+      subtitle={oauthError ? `Sign-in error: ${oauthError}` : "Sign in to your wellness account"}
       showToggle={true}
       toggleText="Don't have an account?"
       toggleLink="/auth/signup"
       toggleLinkText="Sign up"
     >
-      <LoginForm />
+      <LoginForm initialError={oauthError} />
     </AuthLayout>
+  )
+}
+
+export default function LoginPage() {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  return (
+    <Suspense fallback={
+      <AuthLayout
+        title="Welcome back"
+        subtitle="Sign in to your wellness account"
+        showToggle={true}
+        toggleText="Don't have an account?"
+        toggleLink="/auth/signup"
+        toggleLinkText="Sign up"
+      >
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </AuthLayout>
+    }>
+      <div suppressHydrationWarning>
+        {mounted ? <LoginPageContent /> : null}
+      </div>
+    </Suspense>
   )
 }
 

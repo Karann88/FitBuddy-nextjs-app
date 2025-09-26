@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,8 +12,9 @@ import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react"
 import { loginUser } from "@/lib/auth"
 import { useAuth } from "./auth-provider"
 import Link from "next/link"
+import { createSupabaseBrowserClient, hasSupabaseEnv } from "@/lib/supabase"
 
-export function LoginForm() {
+export function LoginForm({ initialError }: { initialError?: string }) {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -23,6 +24,44 @@ export function LoginForm() {
     rememberMe: false,
   })
   const { login } = useAuth()
+
+  // Initialize with OAuth error passed from page if present
+  useEffect(() => {
+    if (initialError) {
+      setError(initialError)
+    }
+  }, [initialError])
+
+  const handleOAuthSignIn = async (provider: "google") => {
+    try {
+      setIsLoading(true)
+      setError("")
+      if (!hasSupabaseEnv) {
+        setError("Authentication is not configured.")
+        return
+      }
+      const supabase = createSupabaseBrowserClient()
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      })
+      if (oauthError) {
+        setError(oauthError.message ?? "OAuth sign-in failed")
+      }
+      // On success, Supabase will redirect to the redirectTo URL
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      setError("An unexpected error occurred during OAuth sign-in")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -129,6 +168,20 @@ export function LoginForm() {
           "Sign in"
         )}
       </Button>
+
+      <div className="relative py-2">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-2 items-center justify-center sm:grid-cols-2">
+        <Button type="button" variant="outline" disabled={isLoading} onClick={() => handleOAuthSignIn("google")}>Sign in with Google</Button>
+        {/* <Button type="button" variant="outline" disabled={isLoading} onClick={() => handleOAuthSignIn("github")}>Sign in with GitHub</Button> */}
+      </div>
     </form>
   )
 }
