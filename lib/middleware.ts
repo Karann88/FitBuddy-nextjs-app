@@ -50,46 +50,17 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  // Prepare response so Supabase can update cookies (refresh tokens etc.)
+  // We now allow the app to be browsed without forcing authentication.
+  // Middleware only exists to allow Supabase to refresh cookies transparently.
   const res = NextResponse.next();
-  
-  // Use request-aware client so that any refreshed cookies are written to the response
   const supabase = createRequestSupabaseClient(req, res);
-
-  // Check the current session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const { pathname } = req.nextUrl;
-
-  // Public routes (don’t require auth)
-  const isPublicRoute =
-    pathname.startsWith("/auth") ||
-    pathname.startsWith("/public") ||
-    pathname === "/";
-
-  if (!session && !isPublicRoute) {
-    // Not signed in → redirect to login
-    const loginUrl = new URL("/auth/login", req.url);
-    loginUrl.searchParams.set("redirectedFrom", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  if (session && pathname.startsWith("/auth")) {
-    // Already signed in → prevent access to login/signup
-    return NextResponse.redirect(new URL("/dashboard", req.url));
-  }
-  // Continue to requested route. Return the same response so any cookie updates persist
+  await supabase.auth.getSession();
   return res;
 }
 
 export const config = {
+  // Run on most routes so auth cookies can refresh, but exclude static internals and auth pages
   matcher: [
-    /*
-     * Match all routes except for static files, Next.js internals, and API routes
-     */
-    "/dashboard/:path*",
-    "/profile/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|api|auth).*)",
   ],
 };
