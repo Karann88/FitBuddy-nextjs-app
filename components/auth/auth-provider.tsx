@@ -84,11 +84,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isLoading) {
       const isAuthPage = pathname.startsWith("/auth")
-      const isPublicPage = pathname === "/privacy" || pathname === "/terms"
-
-      if (!isAuthenticated && !isAuthPage && !isPublicPage) {
-        router.push("/auth/login")
-      } else if (isAuthenticated && isAuthPage) {
+      // Allow the entire app to be browsed without forcing login.
+      // Only redirect authenticated users away from auth pages.
+      if (isAuthenticated && isAuthPage) {
         router.push("/dashboard")
       }
     }
