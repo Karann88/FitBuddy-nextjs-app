@@ -54,7 +54,7 @@ export function WaterTracker() {
   const [weeklyData, setWeeklyData] = useState<Array<{ day: string; cups: number; goal: number; percentage: number; temperature: number }>>([])
   const [monthlyData, setMonthlyData] = useState<Array<{ week: string; average: number; goal: number; consistency: number }>>([])
   const [currentEntryId, setCurrentEntryId] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [waterStats, setWaterStats] = useState<{
     average: number
@@ -74,7 +74,7 @@ export function WaterTracker() {
 
   useEffect(() => {
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 

@@ -192,7 +192,7 @@ export function StretchSequence() {
   const [completedIndices, setCompletedIndices] = useState<Set<number>>(new Set())
   const [streak] = useState(0)
   const [totalSessions] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const currentSequence = sequences[activeSequence]
   const currentStretch = currentSequence[currentStretchIndex]

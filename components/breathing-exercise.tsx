@@ -687,7 +687,7 @@ export function BreathingExercise() {
   const [sessionGoal, setSessionGoal] = useState(5)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [completedSessions, setCompletedSessions] = useState<ExerciseEntry[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const animationRef = useRef<HTMLDivElement>(null)
   const { user, isLoading: isAuthLoading } = useAuth()
   // const audioContextRef = useRef<AudioContext | null>(null)
@@ -698,7 +698,7 @@ export function BreathingExercise() {
 
   useEffect(() => {
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 

@@ -87,7 +87,7 @@ export function MealTracker() {
   const [dailyGoals, setDailyGoals] = useState(DEFAULT_DAILY_GOALS)
   const [showGoalSettings, setShowGoalSettings] = useState(false)
   const [tempGoals, setTempGoals] = useState(DEFAULT_DAILY_GOALS)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const savedGoals = localStorage.getItem("userDailyGoals")
@@ -100,7 +100,7 @@ export function MealTracker() {
 
   useEffect(() => {
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 

@@ -148,7 +148,7 @@ export function FitnessTracker() {
   const [isActive, setIsActive] = useState(false)
   const [newExerciseName, setNewExerciseName] = useState("")
   const [newExerciseDuration, setNewExerciseDuration] = useState(30)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [streak] = useState(0)
   const [totalSessions] = useState(0)
 

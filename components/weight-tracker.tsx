@@ -79,7 +79,7 @@ export function WeightTracker() {
   const [hips, setHips] = useState("")
   const [weightData, setWeightData] = useState<WeightData[]>([])
   const [currentEntryId, setCurrentEntryId] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [goalWeight, setGoalWeight] = useState(70.0)
   const [streak] = useState(0)
   const [totalSessions] = useState(0)

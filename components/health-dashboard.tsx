@@ -66,11 +66,12 @@ export function HealthDashboard() {
     calories: { consumed: 0, remaining: 2200 },
     exercise: { duration: 0, sessions: 0 }
   })
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    // While auth is resolving, do not block UI. Render guest view (no loading).
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 

@@ -45,7 +45,7 @@ export function MoodTracker() {
   const [notes, setNotes] = useState("")
   const [moodData, setMoodData] = useState<Array<{ date: string; mood: number | null; emoji: string | null }>>([])
   const [currentEntryId, setCurrentEntryId] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [moodStats, setMoodStats] = useState<{
     average: number
     mostCommon: string
@@ -62,7 +62,7 @@ export function MoodTracker() {
 
   useEffect(() => {
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 
