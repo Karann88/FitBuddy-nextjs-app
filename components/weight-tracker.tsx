@@ -154,7 +154,7 @@ export function WeightTracker() {
 
   useEffect(() => {
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 

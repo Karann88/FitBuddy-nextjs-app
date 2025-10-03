@@ -58,14 +58,14 @@ export function MentalHealthJournal() {
   const [tags, setTags] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [streak] = useState(0)
   const [totalSessions] = useState(0)
 
   useEffect(() => {
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 

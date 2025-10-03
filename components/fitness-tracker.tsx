@@ -210,7 +210,7 @@ export function FitnessTracker() {
 
   useEffect(() => {
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 

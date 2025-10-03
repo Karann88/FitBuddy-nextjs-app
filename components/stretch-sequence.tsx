@@ -308,7 +308,7 @@ export function StretchSequence() {
 
   useEffect(() => {
     if (isAuthLoading || !user) {
-      setIsLoading(true)
+      setIsLoading(false)
       return
     }
 
