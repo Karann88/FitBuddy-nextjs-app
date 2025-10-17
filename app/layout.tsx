@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
+import "@n8n/chat/style.css"
 // import { AppSidebar } from "@/components/app-sidebar"
 // import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AuthProvider } from "@/components/auth/auth-provider"
 import { ThemeProvider } from "@/components/theme-provider"
+import N8nChat from "@/components/n8n-chat"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +32,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
+            <N8nChat />
             <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>
