@@ -121,3 +121,32 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* n8n Chat color overrides for better contrast (higher specificity to win cascade) */
+html:root {
+  /* User message bubble */
+  --chat--message--user--color: var(--primary-foreground);
+  --chat--message--user--background: var(--primary);
+
+  /* Bot message bubble */
+  --chat--message--bot--color: var(--foreground);
+  --chat--message--bot--background: var(--destructive);
+
+  /* Input colors */
+  --chat--input--text-color: var(--foreground);
+  --chat--input--background: var(--card);
+}
+
+html.dark {
+  /* User message bubble */
+  --chat--message--user--color: var(--primary-foreground);
+  --chat--message--user--background: var(--primary);
+
+  /* Bot message bubble */
+  --chat--message--bot--color: var(--background);
+  --chat--message--bot--background: var(--destructive);
+
+  /* Input colors */
+  --chat--input--text-color: var(--card);
+  --chat--input--background: var(--primary);
+}

@@ -6,7 +6,7 @@ import "@n8n/chat/style.css"
 // import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AuthProvider } from "@/components/auth/auth-provider"
 import { ThemeProvider } from "@/components/theme-provider"
-import N8nChat from "@/components/n8n-chat"
+import Chat from "@/components/chatbot"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,8 +32,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
-            <N8nChat />
-            <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <Chat />
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
